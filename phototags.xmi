@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.achg.phototag:Root xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.achg.phototag="http://org/achg/phototag">
+  <TagCategories Name="Metadata">
+    <Tags Name="Color"/>
+    <Tags Name="Type"/>
+    <Tags Name="Copyright"/>
+    <Tags Name="Primary Content"/>
+    <Tags Name="Social"/>
+  </TagCategories>
+  <TagCategories Name="Location">
+    <Tags Name="Town/Village"/>
+    <Tags Name="Road">
+      <SubTag Name="House"/>
+    </Tags>
+    <Tags Name="Building Type"/>
+  </TagCategories>
+  <TagCategories Name="People">
+    <Tags Name="Surname">
+      <SubTag Name="Forename"/>
+    </Tags>
+    <Tags Name="Group"/>
+    <Tags Name="Trade"/>
+  </TagCategories>
+  <TagCategories Name="Event">
+    <Tags Name="Local"/>
+    <Tags Name="Family"/>
+    <Tags Name="Process"/>
+    <Tags Name="National"/>
+  </TagCategories>
+  <TagCategories Name="Date">
+    <Tags Name="Decade">
+      <SubTag Name="Year"/>
+    </Tags>
+  </TagCategories>
+  <Values Tag="//@TagCategories.0/@Tags.0" Value="Monochrome"/>
+  <Values Tag="//@TagCategories.0/@Tags.1" Value="Photo"/>
+  <Values Tag="//@TagCategories.0/@Tags.1" Value="Art"/>
+  <Values Tag="//@TagCategories.0/@Tags.1" Value="Press Clipping"/>
+  <Values Tag="//@TagCategories.0/@Tags.1" Value="Document"/>
+  <Values Tag="//@TagCategories.0/@Tags.2" Value="Owned"/>
+  <Values Tag="//@TagCategories.0/@Tags.2" Value="Not owned"/>
+  <Values Tag="//@TagCategories.0/@Tags.3" Value="People"/>
+  <Values Tag="//@TagCategories.0/@Tags.3" Value="Places"/>
+  <Values Tag="//@TagCategories.0/@Tags.4" Value="Used on facebook"/>
+  <Values Tag="//@TagCategories.2/@Tags.2" Value="Post"/>
+  <Values Tag="//@TagCategories.2/@Tags.2" Value="Butcher"/>
+  <Values Tag="//@TagCategories.2/@Tags.2" Value="Baker"/>
+  <Values Tag="//@TagCategories.2/@Tags.2" Value="Publican"/>
+  <Values Tag="//@TagCategories.2/@Tags.2" Value="Farmer"/>
+  <Values Tag="//@TagCategories.2/@Tags.2" Value="Gentry"/>
+  <Values Tag="//@TagCategories.2/@Tags.2" Value="Military"/>
+  <Values Tag="//@TagCategories.2/@Tags.2" Value="Religious"/>
+  <Values Tag="//@TagCategories.2/@Tags.2" Value="Shop"/>
+  <Values Tag="//@TagCategories.2/@Tags.2" Value="Industrial"/>
+  <Values Tag="//@TagCategories.3/@Tags.1" Value="Wedding"/>
+  <Values Tag="//@TagCategories.3/@Tags.1" Value="Funeral"/>
+  <Values Tag="//@TagCategories.3/@Tags.1" Value="Party"/>
+  <Values Tag="//@TagCategories.3/@Tags.1" Value="Anniversary"/>
+  <Values Tag="//@TagCategories.3/@Tags.2" Value="Thatching"/>
+  <Values Tag="//@TagCategories.3/@Tags.2" Value="Building"/>
+  <Values Tag="//@TagCategories.3/@Tags.2" Value="Demolition"/>
+  <Values Tag="//@TagCategories.3/@Tags.2" Value="Fire"/>
+  <Values Tag="//@TagCategories.3/@Tags.2" Value="Flood"/>
+  <Values Tag="//@TagCategories.3/@Tags.3" Value="Coronation"/>
+  <Values Tag="//@TagCategories.3/@Tags.3" Value="Silver jubillee"/>
+  <Values Tag="//@TagCategories.3/@Tags.3" Value="Golden jubillee"/>
+  <Values Tag="//@TagCategories.3/@Tags.3" Value="Millennium"/>
+  <Values Tag="//@TagCategories.3/@Tags.3" Value="War"/>
+  <Values Tag="//@TagCategories.1/@Tags.2" Value="Mill"/>
+  <Values Tag="//@TagCategories.1/@Tags.2" Value="School"/>
+  <Values Tag="//@TagCategories.1/@Tags.2" Value="Church"/>
+  <Values Tag="//@TagCategories.1/@Tags.2" Value="Pub"/>
+  <Values Tag="//@TagCategories.1/@Tags.2" Value="Farm"/>
+  <Values Tag="//@TagCategories.1/@Tags.2" Value="Bank"/>
+  <Values Tag="//@TagCategories.1/@Tags.2" Value="Restaurant"/>
+  <Values Tag="//@TagCategories.1/@Tags.2" Value="Takeaway"/>
+  <Values Tag="//@TagCategories.1/@Tags.2" Value="Commercial"/>
+  <Values Tag="//@TagCategories.1/@Tags.2" Value="Landscape"/>
+  <Values Tag="//@TagCategories.1/@Tags.2" Value="Hall"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="1880s"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="1890s"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="1900s"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="1910s"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="1920s"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="1930s"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="1940s"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="1950s"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="1960s"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="1970s"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="1980s"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="1990s"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="2000s"/>
+  <Values Tag="//@TagCategories.4/@Tags.0" Value="2010s"/>
+</org.achg.phototag:Root>

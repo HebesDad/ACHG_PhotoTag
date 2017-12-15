@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated PhotoTagger -->
+      <package
+            uri="http://org/achg/phototag"
+            class="org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelPackage"
+            genModel="src/org/achg/phototag/model/PhotoTagger.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated PhotoTagger -->
+      <parser
+            type="phototag"
+            class="org.achg.phototag.generated.model.PhotoTagModel.util.PhotoTagModelResourceFactoryImpl"/>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.e4.ui.workbench.swt.E4Application"
+            name="Photo Tagger">
+         <property
+               name="appName"
+               value="Photo Tagger">
+         </property>
+      </product>
+   </extension>
+</plugin>
