@@ -25,7 +25,7 @@ public class ImageDisplayView {
 	Label _imageNameLabel;
 	Label _imageLabel;
 	
-	//private ResourceManager _resourceManager = new LocalResourceManager(JFaceResources.getResources());
+	
 
 	@PostConstruct
 	public void create(Composite viewParent, EPartService partService) {
