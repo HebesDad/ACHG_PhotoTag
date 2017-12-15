@@ -53,6 +53,7 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 		label.setText("Category:");
 		label.setLayoutData(gd);
 		
+		
 		_catCombo = new Combo(viewParent, SWT.NONE);
 		_catCombo.setLayoutData(gd);
 		_catCombo.addSelectionListener(new SelectionAdapter() {

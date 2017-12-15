@@ -150,32 +150,12 @@ public class ModelManager {
 			Map<String, Object> m = reg.getExtensionToFactoryMap();
 			m.put("website", new XMIResourceFactoryImpl());
 
-//			// Obtain a new resource set
-//			ResourceSet resSet = new ResourceSetImpl();
-//
-//			// create a resource
-//			Resource resource = resSet.createResource(URI.createURI("file://" + _pathToXmi.replace('\\', '/')));
-			// Get the first model element and cast it to the right type, in my
-			// example everything is hierarchical included in this first node
-			//resource.getContents().add(_modelRoot);
 
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd-H-m-s");
+
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d_H.m.s");
 			String datestr = format.format(Date.from(Instant.now()));
 			
 			FileUtil.copyFile(_modelRoot, _pathToXmi, _pathToXmi + datestr);
-//			try (OutputStream os = new FileOutputStream(new File(_pathToXmi + datestr))) {
-//				Files.copy(new File(_pathToXmi).toPath(), os);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			// now save the content.
-//			try {
-//				resource.save(Collections.EMPTY_MAP);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
 		}
 	}
 
