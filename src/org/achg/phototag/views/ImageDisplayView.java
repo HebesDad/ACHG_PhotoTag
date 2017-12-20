@@ -126,6 +126,7 @@ public class ImageDisplayView {
 			_imageLabel.requestLayout();
 			swtImage.dispose();
 			_imageNameLabel.getParent().requestLayout();
+			desc.destroyResource(swtImage);
 
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
