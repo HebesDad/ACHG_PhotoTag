@@ -20,6 +20,8 @@ import org.achg.phototag.generated.model.PhotoTagModel.Root;
 import org.achg.phototag.generated.model.PhotoTagModel.Tag;
 import org.achg.phototag.generated.model.PhotoTagModel.TagCategory;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
+import org.achg.phototag.jobs.AutoSaveJob;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.common.util.URI;
@@ -124,6 +126,10 @@ public class ModelManager {
 		for (IModelContentChangeListener listener : _modelContentChangeListeners) {
 			listener.modelContentChanged();
 		}
+
+		Job.getJobManager().cancel(AutoSaveJob.class);
+		AutoSaveJob newJob = new AutoSaveJob();
+		newJob.schedule(3 * 60 * 60 * 1000); // 3 minutes
 	}
 
 	public void addModelStatusChangeListener(IModelStatusChangeListener listener) {
@@ -150,11 +156,9 @@ public class ModelManager {
 			Map<String, Object> m = reg.getExtensionToFactoryMap();
 			m.put("website", new XMIResourceFactoryImpl());
 
-
-
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d_H.m.s");
 			String datestr = format.format(Date.from(Instant.now()));
-			
+
 			FileUtil.copyFile(_modelRoot, _pathToXmi, _pathToXmi + datestr);
 		}
 	}
@@ -235,7 +239,8 @@ public class ModelManager {
 		return tagnames.toArray(new String[tagnames.size()]);
 	}
 
-	public static String[] getSubValues(int catIndex, int tagIndex, int subIndex, String... additionals) {
+	public static String[] getSubValues(int catIndex, int tagIndex, int subIndex, String tagValue,
+			String... additionals) {
 		List<String> values = new ArrayList<>();
 
 		for (String addit : additionals) {
@@ -250,12 +255,14 @@ public class ModelManager {
 
 			for (TagValue value : _instance.getModel().getValuesList()) {
 				if (value.getTag() == tag && value.getSubTag() == subtag && value.getSubValue() != null) {
-					if (!values.contains(value.getSubValue()))
-					values.add(value.getSubValue());
+					if (value.getValue().equals(tagValue)) {
+						if (!values.contains(value.getSubValue()))
+							values.add(value.getSubValue());
+					}
 				}
 			}
 		}
-		
+
 		Collections.sort(values);
 		return values.toArray(new String[values.size()]);
 	}

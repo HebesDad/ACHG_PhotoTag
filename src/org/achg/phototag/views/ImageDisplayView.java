@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -32,6 +33,17 @@ public class ImageDisplayView {
 	Label _imageLabel;
 	Button _saveCopyButton;
 	
+//	@PreDestroy
+//	public void goodbye()
+//	{
+//		//try to ensure we release any handle
+//		org.eclipse.swt.graphics.Image img = _imageLabel.getImage();
+//		if (img != null)
+//		{
+//			_imageLabel.setImage(null);
+//			img.dispose();
+//		}
+//	}
 
 	@PostConstruct
 	public void create(Composite viewParent, EPartService partService, Shell shell) {

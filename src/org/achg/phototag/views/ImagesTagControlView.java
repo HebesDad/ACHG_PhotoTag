@@ -72,6 +72,13 @@ public class ImagesTagControlView implements IModelContentChangeListener {
 
 		_valueCombo = new Combo(viewParent, SWT.FILL);
 		_valueCombo.setLayoutData(gd);
+		_valueCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				_subCombo.select(0);
+				populateCombos(false, false, true);
+			}
+		});
 
 		_subCombo = new Combo(viewParent, SWT.FILL);
 		_subCombo.setLayoutData(gd);
@@ -152,7 +159,7 @@ public class ImagesTagControlView implements IModelContentChangeListener {
 				subTag = mainTag.getSubTag(subSel);
 		}
 		String mainValue = _valueCombo.getText();
-		String subValue = _subValueCombo.getText();
+		String subValue = _subValueCombo.getText().trim();
 		if (subValue.isEmpty()) {
 			subValue = null;
 			subTag = null;
@@ -210,14 +217,14 @@ public class ImagesTagControlView implements IModelContentChangeListener {
 			if (tagSelected < 0)
 				tagSelected = 0;
 			_tagCombo.select(tagSelected);
-		}
+		
 		String[] vals = ModelManager.getTagValues(catSelected, tagSelected);
 		if (vals.length > 0)
 			_valueCombo.setItems(vals);
 		else
 			_valueCombo.removeAll();
 		_valueCombo.select(0);
-
+		}
 		int subSelected = _subCombo.getSelectionIndex();
 
 		if (reloadSubTag) {
@@ -226,7 +233,7 @@ public class ImagesTagControlView implements IModelContentChangeListener {
 				subSelected = 0;
 			_subCombo.select(subSelected);
 		}
-		String[] subs = ModelManager.getSubValues(catSelected, tagSelected, subSelected);
+		String[] subs = ModelManager.getSubValues(catSelected, tagSelected, subSelected,_valueCombo.getText().trim(), " ");
 		if (subs.length > 0)
 			_subValueCombo.setItems(subs);
 		else

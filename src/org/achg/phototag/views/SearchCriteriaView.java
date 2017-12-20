@@ -81,6 +81,12 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 		gd = new GridData(SWT.LEFT, SWT.TOP, true, false);
 		_tagValueCombo.setLayoutData(gd);
 
+		_tagValueCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				populateCombos(false, false, true, false, true);
+			}
+		});
 		
 			
 		_subTagCombo = new Combo(viewParent, SWT.NONE);
@@ -191,7 +197,7 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 
 			if (subtagvalues) {
 				_subTagValueCombo.setItems(ModelManager.getSubValues(_catCombo.getSelectionIndex(),
-						_tagCombo.getSelectionIndex(), _subTagCombo.getSelectionIndex(), "<any>", "<unset>"));
+						_tagCombo.getSelectionIndex(), _subTagCombo.getSelectionIndex(),_tagValueCombo.getText().trim(), "<any>", "<unset>"));
 				_subTagValueCombo.select(0);
 				_subTagValueCombo.requestLayout();
 			}
