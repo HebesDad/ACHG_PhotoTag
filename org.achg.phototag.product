@@ -16,7 +16,8 @@
 
    <windowImages/>
 
-
+   <splash
+      location="org.achg.phototag" />
    <launcher>
       <win useIco="false">
          <bmp/>
