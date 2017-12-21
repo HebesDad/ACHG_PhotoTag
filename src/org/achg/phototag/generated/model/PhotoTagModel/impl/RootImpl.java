@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.impl.RootImpl#getFoldersList <em>Folders</em>}</li>
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.impl.RootImpl#getTagCategoriesList <em>Tag Categories</em>}</li>
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.impl.RootImpl#getValuesList <em>Values</em>}</li>
+ *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.impl.RootImpl#getImageCount <em>Image Count</em>}</li>
  * </ul>
  *
  * @generated
@@ -118,6 +119,26 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root {
 	 * @ordered
 	 */
 	protected static final TagValue[] VALUES_EEMPTY_ARRAY = new TagValue [0];
+
+	/**
+	 * The default value of the '{@link #getImageCount() <em>Image Count</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getImageCount()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int IMAGE_COUNT_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getImageCount() <em>Image Count</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getImageCount()
+	 * @generated
+	 * @ordered
+	 */
+	protected int imageCount = IMAGE_COUNT_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -344,6 +365,27 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public int getImageCount() {
+		return imageCount;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setImageCount(int newImageCount) {
+		int oldImageCount = imageCount;
+		imageCount = newImageCount;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, PhotoTagModelPackage.ROOT__IMAGE_COUNT, oldImageCount, imageCount));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -373,6 +415,8 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root {
 				return getTagCategoriesList();
 			case PhotoTagModelPackage.ROOT__VALUES:
 				return getValuesList();
+			case PhotoTagModelPackage.ROOT__IMAGE_COUNT:
+				return getImageCount();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -401,6 +445,9 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root {
 				getValuesList().clear();
 				getValuesList().addAll((Collection<? extends TagValue>)newValue);
 				return;
+			case PhotoTagModelPackage.ROOT__IMAGE_COUNT:
+				setImageCount((Integer)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -425,6 +472,9 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root {
 			case PhotoTagModelPackage.ROOT__VALUES:
 				getValuesList().clear();
 				return;
+			case PhotoTagModelPackage.ROOT__IMAGE_COUNT:
+				setImageCount(IMAGE_COUNT_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -445,6 +495,8 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root {
 				return tagCategories != null && !tagCategories.isEmpty();
 			case PhotoTagModelPackage.ROOT__VALUES:
 				return values != null && !values.isEmpty();
+			case PhotoTagModelPackage.ROOT__IMAGE_COUNT:
+				return imageCount != IMAGE_COUNT_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -461,6 +513,8 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (XmlHome: ");
 		result.append(xmlHome);
+		result.append(", ImageCount: ");
+		result.append(imageCount);
 		result.append(')');
 		return result.toString();
 	}

@@ -25,12 +25,13 @@ public class ScanFoldersJob extends Job {
 	String _rootPrefix;
 	UISynchronize _sync;
 	Shell _shell;
+	private int _extraFolderCount = 0;
+	private int _extraImageCount = 0;
 
 	public ScanFoldersJob(File fileroot, Root modelRoot, UISynchronize sync, Shell shell) {
 		super("Scanning for folders");
 		_fileRoot = fileroot;
 		_rootPrefix = fileroot.getAbsoluteFile().getPath();
-//		_rootPrefix = _rootPrefix.substring(0, _rootPrefix.length() - fileroot.getName().length());
 		_modelRoot = modelRoot;
 		_sync = sync;
 		_shell = shell;
@@ -41,16 +42,17 @@ public class ScanFoldersJob extends Job {
 		Folder matchingFolder = null;
 		if (_modelRoot.getFolders() != null)
 			for (Folder folder : _modelRoot.getFolders()) {
-				if (folder.getName().equals("")) {
+				if (folder.getName()==null || folder.getName().equals("")) {
 					matchingFolder = folder;
 					break;
 				}
 			}
 		if (matchingFolder == null) {
 			matchingFolder = PhotoTagModelFactory.eINSTANCE.createFolder();
-			// matchingFolder.setName(_fileRoot.getName());
+
 			_modelRoot.getFoldersList().add(0, matchingFolder);
 			_dataModified = true;
+			_extraFolderCount++;
 		}
 
 		final Folder finalFolder = matchingFolder;
@@ -69,21 +71,20 @@ public class ScanFoldersJob extends Job {
 		});
 
 		if (_dataModified) {
+			String message = String.format("Scan complete - %d extra folders found and %d extra images found",
+					_extraFolderCount, _extraImageCount);
+			ModelManager.getInstance().notifyModelStatusChangeListeners(message);
 			ModelManager.getInstance().notifyModelContentChangeListeners();
-		}
+		} else
+			ModelManager.getInstance().notifyModelStatusChangeListeners("Scan complete - no additions found");
 		return Status.OK_STATUS;
 	}
 
 	private void checkFolderContents(Folder modelFolder, File javaioFile, IProgressMonitor monitor) {
 
 		File[] children = javaioFile.listFiles();
-		
-		
 
-		SubMonitor 	subMonitor =SubMonitor.convert(monitor, children.length);
-				
-		
-		
+		SubMonitor subMonitor = SubMonitor.convert(monitor, children.length);
 
 		for (File child : children) {
 			String childName = child.getName();
@@ -95,8 +96,9 @@ public class ScanFoldersJob extends Job {
 				if (childFolder == null) {
 					// "new" folder
 					childFolder = PhotoTagModelFactory.eINSTANCE.createFolder();
-					childFolder.setName(child.getAbsolutePath().substring(_rootPrefix.length() +1));
+					childFolder.setName(child.getAbsolutePath().substring(_rootPrefix.length() + 1));
 					modelFolder.getFoldersList().add(childFolder);
+					_extraFolderCount++;
 					_dataModified = true;
 				}
 				checkFolderContents(childFolder, child, subMonitor.split(1));
@@ -105,8 +107,9 @@ public class ScanFoldersJob extends Job {
 					|| childName.endsWith(".png")) {
 				if (findImage(modelFolder, child) == null) {
 					Image newImage = PhotoTagModelFactory.eINSTANCE.createImage();
-					newImage.setName(child.getAbsolutePath().substring(_rootPrefix.length()+1));
+					newImage.setName(child.getAbsolutePath().substring(_rootPrefix.length() + 1));
 					modelFolder.getImagesList().add(newImage);
+					_extraImageCount++;
 					_dataModified = true;
 				}
 			}
@@ -114,7 +117,7 @@ public class ScanFoldersJob extends Job {
 	}
 
 	private Image findImage(Folder modelFolder, File child) {
-		String targetName = child.getAbsolutePath().substring(_rootPrefix.length());
+		String targetName = child.getAbsolutePath().substring(_rootPrefix.length()+1);
 		for (Image putative : modelFolder.getImagesList()) {
 			if (putative.getName().equals(targetName))
 				return putative;
@@ -123,7 +126,7 @@ public class ScanFoldersJob extends Job {
 	}
 
 	private Folder findFolder(Folder modelFolder, File child) {
-		String targetName = child.getAbsolutePath().substring(_rootPrefix.length());
+		String targetName = child.getAbsolutePath().substring(_rootPrefix.length()+1);
 		for (Folder putative : modelFolder.getFoldersList()) {
 			if (putative.getName().equals(targetName))
 				return putative;

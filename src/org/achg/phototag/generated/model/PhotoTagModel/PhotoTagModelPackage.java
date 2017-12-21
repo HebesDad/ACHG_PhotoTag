@@ -103,13 +103,22 @@ public interface PhotoTagModelPackage extends EPackage {
 	int ROOT__VALUES = 3;
 
 	/**
+	 * The feature id for the '<em><b>Image Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROOT__IMAGE_COUNT = 4;
+
+	/**
 	 * The number of structural features of the '<em>Root</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ROOT_FEATURE_COUNT = 4;
+	int ROOT_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Root</em>' class.
@@ -433,6 +442,17 @@ public interface PhotoTagModelPackage extends EPackage {
 	EReference getRoot_Values();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.achg.phototag.generated.model.PhotoTagModel.Root#getImageCount <em>Image Count</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Image Count</em>'.
+	 * @see org.achg.phototag.generated.model.PhotoTagModel.Root#getImageCount()
+	 * @see #getRoot()
+	 * @generated
+	 */
+	EAttribute getRoot_ImageCount();
+
+	/**
 	 * Returns the meta object for class '{@link org.achg.phototag.generated.model.PhotoTagModel.Folder <em>Folder</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -689,6 +709,14 @@ public interface PhotoTagModelPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ROOT__VALUES = eINSTANCE.getRoot_Values();
+
+		/**
+		 * The meta object literal for the '<em><b>Image Count</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ROOT__IMAGE_COUNT = eINSTANCE.getRoot_ImageCount();
 
 		/**
 		 * The meta object literal for the '{@link org.achg.phototag.generated.model.PhotoTagModel.impl.FolderImpl <em>Folder</em>}' class.

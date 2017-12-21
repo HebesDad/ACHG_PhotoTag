@@ -25,6 +25,7 @@ public class AutoSaveJob extends Job {
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		ModelManager.getInstance().save();
+		ModelManager.getInstance().notifyModelStatusChangeListeners("Auto-save complete");
 		return Status.OK_STATUS;
 	}
 

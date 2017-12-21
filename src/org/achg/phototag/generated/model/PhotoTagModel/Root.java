@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.Root#getFoldersList <em>Folders</em>}</li>
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.Root#getTagCategoriesList <em>Tag Categories</em>}</li>
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.Root#getValuesList <em>Values</em>}</li>
+ *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.Root#getImageCount <em>Image Count</em>}</li>
  * </ul>
  *
  * @see org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelPackage#getRoot()
@@ -212,5 +213,31 @@ public interface Root extends EObject {
 	 * @generated
 	 */
 	List<TagValue> getValuesList();
+
+	/**
+	 * Returns the value of the '<em><b>Image Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Image Count</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Image Count</em>' attribute.
+	 * @see #setImageCount(int)
+	 * @see org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelPackage#getRoot_ImageCount()
+	 * @model required="true"
+	 * @generated
+	 */
+	int getImageCount();
+
+	/**
+	 * Sets the value of the '{@link org.achg.phototag.generated.model.PhotoTagModel.Root#getImageCount <em>Image Count</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Image Count</em>' attribute.
+	 * @see #getImageCount()
+	 * @generated
+	 */
+	void setImageCount(int value);
 
 } // Root

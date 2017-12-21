@@ -302,6 +302,7 @@ public class ImagesTagControlView implements IModelContentChangeListener {
 				populateTagValueCombo();
 				populateSubCombo();
 				populateSubValueCombo();
+				if (_selectedImage!=null)
 				_tableViewer.setInput(_selectedImage.getTagValues());
 				_tableViewer.refresh();
 			}

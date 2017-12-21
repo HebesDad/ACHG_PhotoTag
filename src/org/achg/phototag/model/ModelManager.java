@@ -21,6 +21,7 @@ import org.achg.phototag.generated.model.PhotoTagModel.Tag;
 import org.achg.phototag.generated.model.PhotoTagModel.TagCategory;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
 import org.achg.phototag.jobs.AutoSaveJob;
+import org.achg.phototag.jobs.ImageCounterJob;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -112,13 +113,24 @@ public class ModelManager {
 		Resource resource = resSet.getResource(URI.createURI("file://" + _pathToXmi.replace('\\', '/')), true);
 
 		Root myWeb = (Root) resource.getContents().get(0);
+		
+		if (myWeb.getImageCount()==0)
+		{
+			new ImageCounterJob().schedule();
+		}
 
 		return myWeb;
 	}
 
-	private void notifyModelStatusChangeListeners() {
+	public void notifyModelStatusChangeListeners() {
 		for (IModelStatusChangeListener listener : _modelStatusChangeListeners) {
 			listener.modelStatusChanged();
+		}
+	}
+
+	public void notifyModelStatusChangeListeners(String message) {
+		for (IModelStatusChangeListener listener : _modelStatusChangeListeners) {
+			listener.statusMessage(message);
 		}
 	}
 
@@ -192,19 +204,23 @@ public class ModelManager {
 	public static String[] getCategories() {
 		List<String> categories = new ArrayList<>();
 
-		for (TagCategory cat : _instance.getModel().getTagCategoriesList()) {
-			categories.add(cat.getName());
-		}
+		if (_instance.getModel() != null)
+			for (TagCategory cat : _instance.getModel().getTagCategoriesList()) {
+				categories.add(cat.getName());
+			}
 		return categories.toArray(new String[categories.size()]);
 	}
 
 	public static String[] getTags(int selectedCategory) {
 		List<String> tagnames = new ArrayList<>();
 
-		List<Tag> tags = _instance.getModel().getTagCategories()[selectedCategory].getTagsList();
+		if (selectedCategory<0)selectedCategory=0;
+		if (_instance.getModel() != null) {
+			List<Tag> tags = _instance.getModel().getTagCategories()[selectedCategory].getTagsList();
 
-		for (Tag tag : tags) {
-			tagnames.add(tag.getName());
+			for (Tag tag : tags) {
+				tagnames.add(tag.getName());
+			}
 		}
 		return tagnames.toArray(new String[tagnames.size()]);
 	}
@@ -214,15 +230,17 @@ public class ModelManager {
 		for (String addit : additionals) {
 			values.add(addit);
 		}
+		if (catIndex<0)catIndex=0;
+		if (tagIndex<0)tagIndex=0;
+		if (_instance.getModel() != null) {
+			Tag tag = _instance.getModel().getTagCategories()[catIndex].getTagsList().get(tagIndex);
 
-		Tag tag = _instance.getModel().getTagCategories()[catIndex].getTagsList().get(tagIndex);
-
-		for (TagValue value : ModelManager.getInstance().getModel().getValuesList()) {
-			if (value.getTag() == tag && !values.contains(value.getValue())) {
-				values.add(value.getValue());
+			for (TagValue value : ModelManager.getInstance().getModel().getValuesList()) {
+				if (value.getTag() == tag && !values.contains(value.getValue())) {
+					values.add(value.getValue());
+				}
 			}
 		}
-
 		Collections.sort(values);
 		return values.toArray(new String[values.size()]);
 	}
@@ -230,11 +248,17 @@ public class ModelManager {
 	public static String[] getSubsTags(int catIndex, int tagIndex) {
 		List<String> tagnames = new ArrayList<>();
 
-		List<Tag> tags = _instance.getModel().getTagCategories()[catIndex].getTagsList();
-		tags = tags.get(tagIndex).getSubTagList();
 
-		for (Tag tag : tags) {
-			tagnames.add(tag.getName());
+		if (catIndex<0)catIndex=0;
+		if (tagIndex<0)tagIndex=0;
+		
+		if (_instance.getModel() != null) {
+			List<Tag> tags = _instance.getModel().getTagCategories()[catIndex].getTagsList();
+			tags = tags.get(tagIndex).getSubTagList();
+
+			for (Tag tag : tags) {
+				tagnames.add(tag.getName());
+			}
 		}
 		return tagnames.toArray(new String[tagnames.size()]);
 	}
@@ -246,18 +270,24 @@ public class ModelManager {
 		for (String addit : additionals) {
 			values.add(addit);
 		}
+		
+		if (catIndex<0)catIndex=0;
+		if (tagIndex<0)tagIndex=0;
+		if (subIndex<0)subIndex=0;
 
-		Tag tag = _instance.getModel().getTagCategories()[catIndex].getTagsList().get(tagIndex);
-		List<Tag> stlist = tag.getSubTagList();
+		if (_instance.getModel() != null) {
+			Tag tag = _instance.getModel().getTagCategories()[catIndex].getTagsList().get(tagIndex);
+			List<Tag> stlist = tag.getSubTagList();
 
-		if (stlist != null && !stlist.isEmpty()) {
-			Tag subtag = stlist.get(subIndex);
+			if (stlist != null && !stlist.isEmpty()) {
+				Tag subtag = stlist.get(subIndex);
 
-			for (TagValue value : _instance.getModel().getValuesList()) {
-				if (value.getTag() == tag && value.getSubTag() == subtag && value.getSubValue() != null) {
-					if (value.getValue().equals(tagValue)) {
-						if (!values.contains(value.getSubValue()))
-							values.add(value.getSubValue());
+				for (TagValue value : _instance.getModel().getValuesList()) {
+					if (value.getTag() == tag && value.getSubTag() == subtag && value.getSubValue() != null) {
+						if (value.getValue().equals(tagValue)) {
+							if (!values.contains(value.getSubValue()))
+								values.add(value.getSubValue());
+						}
 					}
 				}
 			}

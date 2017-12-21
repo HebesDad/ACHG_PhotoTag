@@ -9,11 +9,12 @@
         </children>
       </children>
       <children xsi:type="advanced:Perspective" xmi:id="__zD6INp4EeeEleokpxPDWQ" elementId="org.achg.phototag.perspective.view" selectedElement="_GJ1O8Np5EeeEleokpxPDWQ" label="View" iconURI="platform:/plugin/org.achg.phototag/icons/scan.png">
-        <children xsi:type="basic:PartSashContainer" xmi:id="_GJ1O8Np5EeeEleokpxPDWQ" elementId="org.achg.phototag.partsashcontainer.1" horizontal="true">
+        <children xsi:type="basic:PartSashContainer" xmi:id="_GJ1O8Np5EeeEleokpxPDWQ" elementId="org.achg.phototag.partsashcontainer.1" containerData="900" horizontal="true">
           <children xsi:type="basic:Part" xmi:id="_d_jwEN29EeeEleokpxPDWQ" elementId="org.achg.phototag.part.searchCriteriaView" containerData="200" contributionURI="bundleclass://org.achg.phototag/org.achg.phototag.views.SearchCriteriaView" label="Search Criteria"/>
           <children xsi:type="basic:Part" xmi:id="_KDBHANp5EeeEleokpxPDWQ" elementId="org.achg.phototag.part.imagelist" containerData="200" contributionURI="bundleclass://org.achg.phototag/org.achg.phototag.views.ImageListView" label="Image List"/>
           <children xsi:type="basic:PartSashContainer" xmi:id="_QQ57oN2lEeeEleokpxPDWQ" elementId="org.achg.phototag.partsashcontainer.2" containerData="600" selectedElement="_jw12wNuPEeeEleokpxPDWQ">
-            <children xsi:type="basic:Part" xmi:id="_jw12wNuPEeeEleokpxPDWQ" elementId="org.achg.phototag.part.imageDisplayPart" containerData="850" contributionURI="bundleclass://org.achg.phototag/org.achg.phototag.views.ImageDisplayView" label="Image Display" iconURI="platform:/plugin/org.achg.phototag/icons/image.png"/>
+            <children xsi:type="basic:Part" xmi:id="_xclYgOYYEeeveqmQXF-rYg" elementId="org.achg.phototag.part.statusView" containerData="50" contributionURI="bundleclass://org.achg.phototag/org.achg.phototag.views.StatusView" label="Status"/>
+            <children xsi:type="basic:Part" xmi:id="_jw12wNuPEeeEleokpxPDWQ" elementId="org.achg.phototag.part.imageDisplayPart" containerData="800" contributionURI="bundleclass://org.achg.phototag/org.achg.phototag.views.ImageDisplayView" label="Image Display" iconURI="platform:/plugin/org.achg.phototag/icons/image.png"/>
             <children xsi:type="basic:Part" xmi:id="_X4vPsN2lEeeEleokpxPDWQ" elementId="org.achg.phototag.part.imageTagControlView" containerData="150" contributionURI="bundleclass://org.achg.phototag/org.achg.phototag.views.ImagesTagControlView" label="Image Tag Control View"/>
           </children>
         </children>

@@ -34,6 +34,11 @@
         upperBound="-1"
         eType="#//TagValue"
         containment="true"/>
+    <eStructuralFeatures
+        xsi:type="ecore:EAttribute"
+        name="ImageCount"
+        lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers
       xsi:type="ecore:EClass"

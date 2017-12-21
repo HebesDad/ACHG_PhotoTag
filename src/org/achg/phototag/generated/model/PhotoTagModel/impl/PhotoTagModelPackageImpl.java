@@ -192,6 +192,15 @@ public class PhotoTagModelPackageImpl extends EPackageImpl implements PhotoTagMo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getRoot_ImageCount() {
+        return (EAttribute)getRoot().getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getFolder() {
 		if (folderEClass == null) {
 			folderEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(PhotoTagModelPackage.eNS_URI).getEClassifiers().get(1);
