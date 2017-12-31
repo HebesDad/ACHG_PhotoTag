@@ -5,19 +5,26 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.achg.phototag.generated.model.PhotoTagModel.Folder;
 import org.achg.phototag.generated.model.PhotoTagModel.Image;
 import org.achg.phototag.model.IModelContentChangeListener;
+import org.achg.phototag.model.IModelStatusChangeListener;
 import org.achg.phototag.model.ModelManager;
 import org.achg.phototag.search.ISearchResultListener;
 import org.achg.phototag.search.SearchCriteriaContainer;
+import org.achg.phototag.views.components.ImageFinderFolderVisitor;
 import org.achg.phototag.views.components.ImageListContentProvider;
 import org.achg.phototag.views.components.ImageListInput;
 import org.achg.phototag.views.components.ImageListViewerComparator;
 import org.achg.phototag.views.components.ModelLabelProvider;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -27,8 +34,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.osgi.service.prefs.Preferences;
 
-public class ImageListView implements IModelContentChangeListener, ISearchResultListener {
+public class ImageListView implements IModelContentChangeListener, ISearchResultListener, IModelStatusChangeListener {
 	public static String ID = "org.achg.phototag.part.imagelist";
 	TreeViewer _treeViewer;
 	UISynchronize _sync;
@@ -66,6 +74,10 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 		SearchCriteriaContainer.getInstance().addSearchResultListener(this);
 
 		shell.setMaximized(true);
+		
+		selectLastImage();
+		
+		ModelManager.getInstance().addModelStatusChangeListener(this);
 	}
 
 	@Override
@@ -75,9 +87,39 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 			public void run() {
 				_treeViewer.refresh();
 				_treeViewer.expandToLevel(3);
+				
+				
 			}
 		});
 
+	}
+	
+	private void selectLastImage()
+	{
+		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode("org.achg.phototag");
+
+		Preferences sub1 = preferences.node("root");
+		String lastImageName = sub1.get("selectedImage", null );
+		if (lastImageName!= null)
+		{
+			ImageFinderFolderVisitor finder = new ImageFinderFolderVisitor(lastImageName);
+			ModelManager.getInstance().visitFolders(finder);
+			if (finder.getFoundImage()!= null)
+			{
+				expandToShow((Folder) finder.getFoundImage().eContainer());
+				_treeViewer.expandToLevel(finder.getFoundImage(), AbstractTreeViewer.ALL_LEVELS);
+				_treeViewer.setSelection(new StructuredSelection(finder.getFoundImage()));
+			}
+		}
+	}
+
+	private void expandToShow(Folder eContainer) {
+		if (eContainer.eContainer() instanceof Folder)
+		{
+			expandToShow((Folder) eContainer.eContainer());
+		}
+		
+		_treeViewer.expandToLevel(eContainer, AbstractTreeViewer.ALL_LEVELS);
 	}
 
 	@Override
@@ -103,6 +145,15 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 				selected = result.get(index);
 				_treeViewer.setSelection(new StructuredSelection(selected));
 			}
+		} else {
+			Image selected = (Image) _treeViewer.getStructuredSelection().getFirstElement();
+			Folder folder = (Folder) selected.eContainer();
+			int index = folder.getImagesList().indexOf(selected);
+			index--;
+			if (index >= 0) {
+				selected = folder.getImagesList().get(index);
+				_treeViewer.setSelection(new StructuredSelection(selected));
+			}
 		}
 
 	}
@@ -114,11 +165,36 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 			List<Image> result = SearchCriteriaContainer.getInstance().getResults();
 			int index = result.indexOf(selected);
 			index++;
-			if (index <result.size()) {
+			if (index < result.size()) {
 				selected = result.get(index);
 				_treeViewer.setSelection(new StructuredSelection(selected));
 			}
+		} else {
+			Image selected = (Image) _treeViewer.getStructuredSelection().getFirstElement();
+			Folder folder = (Folder) selected.eContainer();
+			int index = folder.getImagesList().indexOf(selected);
+			index++;
+			if (index < folder.getImagesLength()) {
+				selected = folder.getImagesList().get(index);
+				_treeViewer.setSelection(new StructuredSelection(selected));
+			}
 		}
+	}
 
+	@Override
+	public void modelStatusChanged() {
+		
+		_sync.asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				selectLastImage();;
+			}
+		});
+	}
+
+	@Override
+	public void statusMessage(String message) {
+		// TODO Auto-generated method stub
+		
 	}
 }

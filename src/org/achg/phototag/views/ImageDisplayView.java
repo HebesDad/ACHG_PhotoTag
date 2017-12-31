@@ -13,6 +13,8 @@ import org.achg.phototag.FileUtil;
 import org.achg.phototag.generated.model.PhotoTagModel.Image;
 import org.achg.phototag.model.ModelManager;
 import org.achg.phototag.ui.TaggerImages;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -27,23 +29,15 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 
 public class ImageDisplayView {
 	Label _imageNameLabel;
 	Label _imageLabel;
 	Button _saveCopyButton;
 	
-//	@PreDestroy
-//	public void goodbye()
-//	{
-//		//try to ensure we release any handle
-//		org.eclipse.swt.graphics.Image img = _imageLabel.getImage();
-//		if (img != null)
-//		{
-//			_imageLabel.setImage(null);
-//			img.dispose();
-//		}
-//	}
+
 
 	@PostConstruct
 	public void create(Composite viewParent, EPartService partService, Shell shell) {
@@ -98,6 +92,16 @@ public class ImageDisplayView {
 
 			paintImage(rootPath + "\\" + ((Image) selection).getName());
 			
+			IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode("org.achg.phototag");
+
+			Preferences sub1 = preferences.node("root");
+			sub1.put("selectedImage", ((Image) selection).getName() );
+			try {
+				preferences.flush();
+			} catch (BackingStoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

@@ -49,7 +49,7 @@ public class SearchJob extends Job {
 		}
 
 		@Override
-		public void visitFolder(Folder folder) {
+		public boolean visitFolder(Folder folder) {
 			Image[] images = folder.getImages();
 			if (images != null) {
 				for (Image contender : images) {
@@ -58,6 +58,7 @@ public class SearchJob extends Job {
 					}
 				}
 			}
+			return true;
 		}
 
 		private boolean imageMatches(Image contender) {

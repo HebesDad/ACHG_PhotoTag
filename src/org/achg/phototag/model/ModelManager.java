@@ -113,9 +113,8 @@ public class ModelManager {
 		Resource resource = resSet.getResource(URI.createURI("file://" + _pathToXmi.replace('\\', '/')), true);
 
 		Root myWeb = (Root) resource.getContents().get(0);
-		
-		if (myWeb.getImageCount()==0)
-		{
+
+		if (myWeb.getImageCount() == 0) {
 			new ImageCounterJob().schedule();
 		}
 
@@ -214,7 +213,8 @@ public class ModelManager {
 	public static String[] getTags(int selectedCategory) {
 		List<String> tagnames = new ArrayList<>();
 
-		if (selectedCategory<0)selectedCategory=0;
+		if (selectedCategory < 0)
+			selectedCategory = 0;
 		if (_instance.getModel() != null) {
 			List<Tag> tags = _instance.getModel().getTagCategories()[selectedCategory].getTagsList();
 
@@ -230,8 +230,10 @@ public class ModelManager {
 		for (String addit : additionals) {
 			values.add(addit);
 		}
-		if (catIndex<0)catIndex=0;
-		if (tagIndex<0)tagIndex=0;
+		if (catIndex < 0)
+			catIndex = 0;
+		if (tagIndex < 0)
+			tagIndex = 0;
 		if (_instance.getModel() != null) {
 			Tag tag = _instance.getModel().getTagCategories()[catIndex].getTagsList().get(tagIndex);
 
@@ -248,10 +250,11 @@ public class ModelManager {
 	public static String[] getSubsTags(int catIndex, int tagIndex) {
 		List<String> tagnames = new ArrayList<>();
 
+		if (catIndex < 0)
+			catIndex = 0;
+		if (tagIndex < 0)
+			tagIndex = 0;
 
-		if (catIndex<0)catIndex=0;
-		if (tagIndex<0)tagIndex=0;
-		
 		if (_instance.getModel() != null) {
 			List<Tag> tags = _instance.getModel().getTagCategories()[catIndex].getTagsList();
 			tags = tags.get(tagIndex).getSubTagList();
@@ -270,10 +273,13 @@ public class ModelManager {
 		for (String addit : additionals) {
 			values.add(addit);
 		}
-		
-		if (catIndex<0)catIndex=0;
-		if (tagIndex<0)tagIndex=0;
-		if (subIndex<0)subIndex=0;
+
+		if (catIndex < 0)
+			catIndex = 0;
+		if (tagIndex < 0)
+			tagIndex = 0;
+		if (subIndex < 0)
+			subIndex = 0;
 
 		if (_instance.getModel() != null) {
 			Tag tag = _instance.getModel().getTagCategories()[catIndex].getTagsList().get(tagIndex);
@@ -301,11 +307,14 @@ public class ModelManager {
 		innerVisitFolder(visitor, _modelRoot.getFolders());
 	}
 
-	private void innerVisitFolder(IFolderVisitor visitor, Folder[] folders) {
+	private boolean innerVisitFolder(IFolderVisitor visitor, Folder[] folders) {
 		for (Folder folder : folders) {
-			visitor.visitFolder(folder);
+			if (!visitor.visitFolder(folder))
+				return false;
 			if (folder.getFolders() != null)
-				innerVisitFolder(visitor, folder.getFolders());
+				if (!innerVisitFolder(visitor, folder.getFolders()))
+					return false;
 		}
+		return true;
 	}
 }

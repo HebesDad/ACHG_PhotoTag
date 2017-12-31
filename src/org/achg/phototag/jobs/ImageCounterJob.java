@@ -35,9 +35,9 @@ public class ImageCounterJob extends Job{
 		}
 
 		@Override
-		public void visitFolder(Folder folder) {
+		public boolean visitFolder(Folder folder) {
 			_count += folder.getImagesLength();
-			
+			return true;
 		}
 		
 	}
