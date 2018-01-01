@@ -21,9 +21,11 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.equinox.internal.app.ErrorApplication;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -40,6 +42,8 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 	public static String ID = "org.achg.phototag.part.imagelist";
 	TreeViewer _treeViewer;
 	UISynchronize _sync;
+	ESelectionService _selectionService;
+	EPartService _partService ;
 
 	@Inject
 	public ImageListView(UISynchronize sync) {
@@ -47,7 +51,9 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 	}
 
 	@PostConstruct
-	public void create(Composite viewParent, ESelectionService selectionService, Shell shell) {
+	public void create(Composite viewParent, ESelectionService selectionService, Shell shell, EPartService partService) {
+		_selectionService=selectionService;
+		_partService=partService;
 		GridLayout layout = new GridLayout(1, false);
 		viewParent.setLayout(layout);
 
@@ -107,7 +113,7 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 			if (finder.getFoundImage()!= null)
 			{
 				expandToShow((Folder) finder.getFoundImage().eContainer());
-				_treeViewer.expandToLevel(finder.getFoundImage(), AbstractTreeViewer.ALL_LEVELS);
+				_treeViewer.expandToLevel(finder.getFoundImage(), 0);
 				_treeViewer.setSelection(new StructuredSelection(finder.getFoundImage()));
 			}
 		}
@@ -133,6 +139,23 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 		});
 
 	}
+	
+	private void pushSelection(Image selection)
+	{
+		_treeViewer.setSelection(new StructuredSelection(selection));
+		_selectionService.setSelection(selection);
+		
+		MPart mpart = _partService.findPart(ImageDisplayView.ID);
+		if (mpart != null)
+		{
+			Object obj = mpart.getObject();
+			if (obj instanceof ImageDisplayView)
+			{
+				((ImageDisplayView)obj).receiveSelection(selection);
+			}
+					
+		}
+	}
 
 	public void previousImage() {
 		if (SearchCriteriaContainer.getInstance().getResults() != null) {
@@ -143,7 +166,7 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 			if (index > 0) {
 				index--;
 				selected = result.get(index);
-				_treeViewer.setSelection(new StructuredSelection(selected));
+				pushSelection(selected);
 			}
 		} else {
 			Image selected = (Image) _treeViewer.getStructuredSelection().getFirstElement();
@@ -152,7 +175,7 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 			index--;
 			if (index >= 0) {
 				selected = folder.getImagesList().get(index);
-				_treeViewer.setSelection(new StructuredSelection(selected));
+				pushSelection(selected);
 			}
 		}
 
@@ -167,7 +190,7 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 			index++;
 			if (index < result.size()) {
 				selected = result.get(index);
-				_treeViewer.setSelection(new StructuredSelection(selected));
+				pushSelection(selected);
 			}
 		} else {
 			Image selected = (Image) _treeViewer.getStructuredSelection().getFirstElement();
@@ -176,7 +199,7 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 			index++;
 			if (index < folder.getImagesLength()) {
 				selected = folder.getImagesList().get(index);
-				_treeViewer.setSelection(new StructuredSelection(selected));
+				pushSelection(selected);
 			}
 		}
 	}

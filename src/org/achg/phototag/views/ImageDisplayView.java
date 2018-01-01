@@ -33,6 +33,9 @@ import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
 public class ImageDisplayView {
+	
+	public static final String ID="org.achg.phototag.part.imageDisplayPart";
+	
 	Label _imageNameLabel;
 	Label _imageLabel;
 	Button _saveCopyButton;
