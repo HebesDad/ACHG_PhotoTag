@@ -155,6 +155,16 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 			}
 					
 		}
+		
+		mpart = _partService.findPart(ImagesTagControlView.ID);
+		if (mpart!=null)
+		{
+			Object obj = mpart.getObject();
+			if (obj instanceof ImagesTagControlView)
+			{
+				((ImagesTagControlView)obj).receiveSelection(selection);
+			}
+		}
 	}
 
 	public void previousImage() {

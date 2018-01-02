@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 public class ImagesTagControlView implements IModelContentChangeListener {
+	public static final String ID="org.achg.phototag.part.imageTagControlView";
 	TableViewer _tableViewer;
 	Combo _catCombo;
 	Combo _tagCombo;
