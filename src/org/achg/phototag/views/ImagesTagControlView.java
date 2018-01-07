@@ -1,5 +1,9 @@
 package org.achg.phototag.views;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -9,6 +13,7 @@ import org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelFactory;
 import org.achg.phototag.generated.model.PhotoTagModel.Tag;
 import org.achg.phototag.generated.model.PhotoTagModel.TagCategory;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
+import org.achg.phototag.model.DataChangeType;
 import org.achg.phototag.model.IModelContentChangeListener;
 import org.achg.phototag.model.ModelManager;
 import org.achg.phototag.views.components.ImagesModelLabelProvider;
@@ -29,7 +34,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 public class ImagesTagControlView implements IModelContentChangeListener {
-	public static final String ID="org.achg.phototag.part.imageTagControlView";
+	public static final String ID = "org.achg.phototag.part.imageTagControlView";
 	TableViewer _tableViewer;
 	Combo _catCombo;
 	Combo _tagCombo;
@@ -125,7 +130,7 @@ public class ImagesTagControlView implements IModelContentChangeListener {
 						_selectedImage.getTagValuesList().remove(selected);
 					}
 				}
-				ModelManager.getInstance().notifyModelContentChangeListeners();
+				ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.VALUE_USAGE));
 			}
 		});
 
@@ -139,6 +144,7 @@ public class ImagesTagControlView implements IModelContentChangeListener {
 	}
 
 	private void addTag() {
+		List<DataChangeType> modTypes = new ArrayList<>();
 		_catCombo.getText();
 		TagCategory cat;
 		int catSel = _catCombo.getSelectionIndex();
@@ -147,6 +153,7 @@ public class ImagesTagControlView implements IModelContentChangeListener {
 			cat.setName(_catCombo.getText());
 			ModelManager.getInstance().getModel().getTagCategoriesList().add(cat);
 			catSel = ModelManager.getInstance().getModel().getTagCategoriesList().size() - 1;
+			modTypes.add(DataChangeType.ADD_CATEGORY);
 		} else
 			cat = ModelManager.getInstance().getModel().getTagCategories()[_catCombo.getSelectionIndex()];
 
@@ -157,6 +164,7 @@ public class ImagesTagControlView implements IModelContentChangeListener {
 			mainTag.setName(_tagCombo.getText());
 			cat.getTagsList().add(mainTag);
 			tagSel = cat.getTagsLength() - 1;
+			modTypes.add(DataChangeType.ADD_TAG);
 		} else
 			mainTag = cat.getTags(tagSel);
 
@@ -168,6 +176,7 @@ public class ImagesTagControlView implements IModelContentChangeListener {
 				subTag.setName(_subCombo.getText());
 				mainTag.getSubTagList().add(subTag);
 				subSel = mainTag.getSubTagLength() - 1;
+				modTypes.add(DataChangeType.ADD_SUBTAG);
 			} else
 				subTag = mainTag.getSubTag(subSel);
 		}
@@ -186,19 +195,21 @@ public class ImagesTagControlView implements IModelContentChangeListener {
 			value.setValue(mainValue);
 			value.setSubValue(subValue);
 			ModelManager.getInstance().getModel().getValuesList().add(value);
+			modTypes.add(DataChangeType.ADD_VALUE);
 		}
 		_selectedImage.getTagValuesList().add(value);
+		modTypes.add(DataChangeType.VALUE_USAGE);
 
-		_catCombo.select(catSel);
+//		_catCombo.select(catSel);
+//
+//		_tagCombo.select(tagSel);
+//
+//		_subCombo.select(subSel);
+//		_valueCombo.select(0);
+//		if (_subValueCombo.getItemCount() > 0)
+//			_subValueCombo.select(0);
 
-		_tagCombo.select(tagSel);
-
-		_subCombo.select(subSel);
-		_valueCombo.select(0);
-		if (_subValueCombo.getItemCount() > 0)
-			_subValueCombo.select(0);
-
-		ModelManager.getInstance().notifyModelContentChangeListeners();
+		ModelManager.getInstance().notifyModelContentChangeListeners(modTypes);
 	}
 
 	private TagValue findValue(Tag mainTag, Tag subTag, String mainValue, String subValue) {
@@ -207,8 +218,8 @@ public class ImagesTagControlView implements IModelContentChangeListener {
 			if (value.getTag() == mainTag && value.getSubTag() == subTag && value.getValue().equals(mainValue))
 
 			{
-				if ((subTag == null && value.getSubTag() == null)
-						|| (value.getSubTag() == subTag && value.getSubValue() != null && value.getSubValue().equals(subValue)))
+				if ((subTag == null && value.getSubTag() == null) || (value.getSubTag() == subTag
+						&& value.getSubValue() != null && value.getSubValue().equals(subValue)))
 					return value;
 			}
 		}
@@ -290,21 +301,25 @@ public class ImagesTagControlView implements IModelContentChangeListener {
 	}
 
 	@Override
-	public void modelContentChanged() {
+	public void modelContentChanged(List<DataChangeType> types) {
 		if (_sync == null)
 			return;
 		_sync.asyncExec(new Runnable() {
 
 			@Override
 			public void run() {
-
-				populateCategoryCombo();
-				populateTagCombo();
-				populateTagValueCombo();
-				populateSubCombo();
-				populateSubValueCombo();
-				if (_selectedImage!=null)
-				_tableViewer.setInput(_selectedImage.getTagValues());
+				if (types.contains(DataChangeType.ADD_CATEGORY) || types.contains(DataChangeType.MODIFY_CATEGORY))
+					populateCategoryCombo();
+				if (types.contains(DataChangeType.ADD_TAG) || types.contains(DataChangeType.MODIFY_TAG))
+					populateTagCombo();
+				if (types.contains(DataChangeType.ADD_VALUE) || types.contains(DataChangeType.MODIFY_VALUE))
+					populateTagValueCombo();
+				if (types.contains(DataChangeType.ADD_SUBTAG) || types.contains(DataChangeType.MODIFY_TAG))
+					populateSubCombo();
+				if (types.contains(DataChangeType.ADD_VALUE) || types.contains(DataChangeType.MODIFY_VALUE))
+					populateSubValueCombo();
+				if (_selectedImage != null)
+					_tableViewer.setInput(_selectedImage.getTagValues());
 				_tableViewer.refresh();
 			}
 		});

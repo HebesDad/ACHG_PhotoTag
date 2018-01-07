@@ -1,11 +1,14 @@
 package org.achg.phototag.jobs;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.achg.phototag.generated.model.PhotoTagModel.Folder;
 import org.achg.phototag.generated.model.PhotoTagModel.Image;
 import org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelFactory;
 import org.achg.phototag.generated.model.PhotoTagModel.Root;
+import org.achg.phototag.model.DataChangeType;
 import org.achg.phototag.model.DataModifier;
 import org.achg.phototag.model.ModelManager;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -39,6 +42,7 @@ public class ScanFoldersJob extends Job {
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
+		List<DataChangeType> modTypes = new ArrayList<>();
 		Folder matchingFolder = null;
 		if (_modelRoot.getFolders() != null)
 			for (Folder folder : _modelRoot.getFolders()) {
@@ -53,6 +57,8 @@ public class ScanFoldersJob extends Job {
 			_modelRoot.getFoldersList().add(0, matchingFolder);
 			_dataModified = true;
 			_extraFolderCount++;
+			
+			modTypes.add(DataChangeType.ADD_FOLDER);
 		}
 
 		final Folder finalFolder = matchingFolder;
@@ -64,7 +70,7 @@ public class ScanFoldersJob extends Job {
 			public void run() {
 				monitorDialog.open();
 
-				checkFolderContents(finalFolder, _fileRoot, finalMonitor);
+				checkFolderContents(finalFolder, _fileRoot, finalMonitor,modTypes);
 
 				monitorDialog.close();
 			}
@@ -74,13 +80,13 @@ public class ScanFoldersJob extends Job {
 			String message = String.format("Scan complete - %d extra folders found and %d extra images found",
 					_extraFolderCount, _extraImageCount);
 			ModelManager.getInstance().notifyModelStatusChangeListeners(message);
-			ModelManager.getInstance().notifyModelContentChangeListeners();
+			ModelManager.getInstance().notifyModelContentChangeListeners(modTypes);
 		} else
 			ModelManager.getInstance().notifyModelStatusChangeListeners("Scan complete - no additions found");
 		return Status.OK_STATUS;
 	}
 
-	private void checkFolderContents(Folder modelFolder, File javaioFile, IProgressMonitor monitor) {
+	private void checkFolderContents(Folder modelFolder, File javaioFile, IProgressMonitor monitor,List<DataChangeType> modTypes) {
 
 		File[] children = javaioFile.listFiles();
 
@@ -100,8 +106,9 @@ public class ScanFoldersJob extends Job {
 					modelFolder.getFoldersList().add(childFolder);
 					_extraFolderCount++;
 					_dataModified = true;
+					modTypes.add(DataChangeType.ADD_FOLDER);
 				}
-				checkFolderContents(childFolder, child, subMonitor.split(1));
+				checkFolderContents(childFolder, child, subMonitor.split(1),modTypes);
 			}
 			if (childName.endsWith(".jpg") || childName.endsWith(".jpeg") || childName.endsWith(".gif")
 					|| childName.endsWith(".png")) {
@@ -111,6 +118,7 @@ public class ScanFoldersJob extends Job {
 					modelFolder.getImagesList().add(newImage);
 					_extraImageCount++;
 					_dataModified = true;
+					modTypes.add(DataChangeType.ADD_IMAGE);
 				}
 			}
 		}

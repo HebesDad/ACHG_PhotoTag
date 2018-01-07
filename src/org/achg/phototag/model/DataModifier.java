@@ -1,6 +1,7 @@
 package org.achg.phototag.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.achg.phototag.generated.model.PhotoTagModel.Folder;
 import org.achg.phototag.generated.model.PhotoTagModel.Root;
@@ -25,7 +26,7 @@ public class DataModifier {
 		}
 		cats.add(cat);
 		ModelManager.getInstance().getModel().setTagCategories(cats.toArray(new TagCategory[cats.size()]));
-		ModelManager.getInstance().notifyModelContentChangeListeners();
+		ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_CATEGORY));
 	}
 	
 	public void addTag(Shell shell,TagCategory cat,Tag newtag)
@@ -43,7 +44,7 @@ public class DataModifier {
 		cat.setTags(tags.toArray(new Tag[tags.size()]));
 
 		
-		ModelManager.getInstance().notifyModelContentChangeListeners();
+		ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_TAG));
 	}
 	
 	public void addSubTag(Shell shell,Tag parent, Tag newtag)
@@ -61,7 +62,7 @@ public class DataModifier {
 		parent.setSubTag(subtags.toArray(new Tag[subtags.size()]));
 
 		
-		ModelManager.getInstance().notifyModelContentChangeListeners();
+		ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_SUBTAG));
 	}
 	
 	public void addValue(Shell shell, TagValue value)
@@ -81,7 +82,7 @@ public class DataModifier {
 		ModelManager.getInstance().getModel().setValues(values.toArray(new TagValue[values.size()]));
 
 		
-		ModelManager.getInstance().notifyModelContentChangeListeners();
+		ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_VALUE));
 	}
 
 	

@@ -1,10 +1,13 @@
 package org.achg.phototag.views;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelFactory;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
 import org.achg.phototag.jobs.SearchJob;
+import org.achg.phototag.model.DataChangeType;
 import org.achg.phototag.model.IModelContentChangeListener;
 import org.achg.phototag.model.ModelManager;
 import org.achg.phototag.search.SearchCriteriaContainer;
@@ -46,14 +49,13 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 		Label label = new Label(viewParent, SWT.NONE);
 		label.setText("Search Criteria");
 		label.setLayoutData(gd);
-		
+
 		gd = new GridData(SWT.LEFT, SWT.TOP, true, false);
 
-		 label = new Label(viewParent, SWT.NONE);
+		label = new Label(viewParent, SWT.NONE);
 		label.setText("Category:");
 		label.setLayoutData(gd);
-		
-		
+
 		_catCombo = new Combo(viewParent, SWT.NONE);
 		_catCombo.setLayoutData(gd);
 		_catCombo.addSelectionListener(new SelectionAdapter() {
@@ -62,8 +64,6 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 				populateCombos(false, true, true, true, true);
 			}
 		});
-		
-		 
 
 		_tagCombo = new Combo(viewParent, SWT.NONE);
 		gd = new GridData(SWT.LEFT, SWT.TOP, true, false);
@@ -74,8 +74,6 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 				populateCombos(false, false, true, true, true);
 			}
 		});
-		
-		 
 
 		_tagValueCombo = new Combo(viewParent, SWT.NONE);
 		gd = new GridData(SWT.LEFT, SWT.TOP, true, false);
@@ -87,8 +85,7 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 				populateCombos(false, false, true, false, true);
 			}
 		});
-		
-			
+
 		_subTagCombo = new Combo(viewParent, SWT.NONE);
 		gd = new GridData(SWT.LEFT, SWT.TOP, true, false);
 		_subTagCombo.setLayoutData(gd);
@@ -98,8 +95,6 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 				populateCombos(false, false, false, true, true);
 			}
 		});
-		
-		
 
 		_subTagValueCombo = new Combo(viewParent, SWT.NONE);
 		gd = new GridData(SWT.LEFT, SWT.TOP, true, false);
@@ -124,7 +119,7 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 					criteria.setSubTag(criteria.getTag().getSubTag(_subTagCombo.getSelectionIndex()));
 					criteria.setSubValue(_subTagValueCombo.getText());
 				}
-				
+
 				SearchCriteriaContainer.getInstance().addCriteria(criteria);
 
 				_selectedTableViewer.setInput(SearchCriteriaContainer.getInstance().getCriteria());
@@ -196,23 +191,29 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 			}
 
 			if (subtagvalues) {
-				_subTagValueCombo.setItems(ModelManager.getSubValues(_catCombo.getSelectionIndex(),
-						_tagCombo.getSelectionIndex(), _subTagCombo.getSelectionIndex(),_tagValueCombo.getText().trim(), "<any>", "<unset>"));
+				_subTagValueCombo.setItems(
+						ModelManager.getSubValues(_catCombo.getSelectionIndex(), _tagCombo.getSelectionIndex(),
+								_subTagCombo.getSelectionIndex(), _tagValueCombo.getText().trim(), "<any>", "<unset>"));
 				_subTagValueCombo.select(0);
 				_subTagValueCombo.requestLayout();
 			}
 
-			
 		}
 	}
 
 	@Override
-	public void modelContentChanged() {
+	public void modelContentChanged(List<DataChangeType> modTypes) {
 		_sync.asyncExec(new Runnable() {
 
 			@Override
 			public void run() {
-				populateCombos(true, true, true, true, true);
+				populateCombos(
+						modTypes.contains(DataChangeType.ADD_CATEGORY)
+								|| modTypes.contains(DataChangeType.MODIFY_CATEGORY),
+						modTypes.contains(DataChangeType.ADD_TAG) || modTypes.contains(DataChangeType.MODIFY_TAG),
+						modTypes.contains(DataChangeType.ADD_SUBTAG) || modTypes.contains(DataChangeType.MODIFY_TAG),
+						modTypes.contains(DataChangeType.ADD_VALUE) || modTypes.contains(DataChangeType.MODIFY_VALUE),
+						modTypes.contains(DataChangeType.ADD_VALUE) || modTypes.contains(DataChangeType.MODIFY_VALUE));
 			}
 		});
 	}

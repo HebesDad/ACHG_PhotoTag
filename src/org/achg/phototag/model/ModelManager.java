@@ -82,7 +82,13 @@ public class ModelManager {
 		}
 		_modelLoaded = true;
 		notifyModelStatusChangeListeners();
-		notifyModelContentChangeListeners();
+		List<DataChangeType> types = new ArrayList<>();
+		types.add(DataChangeType.ADD_FOLDER);
+		types.add(DataChangeType.ADD_IMAGE);
+		types.add(DataChangeType.ADD_TAG);
+		types.add(DataChangeType.ADD_SUBTAG);
+		types.add(DataChangeType.ADD_VALUE);
+		notifyModelContentChangeListeners(types);
 
 		storeSelectedFolder(selectedFolder);
 	}
@@ -133,9 +139,9 @@ public class ModelManager {
 		}
 	}
 
-	public void notifyModelContentChangeListeners() {
+	public void notifyModelContentChangeListeners(List<DataChangeType> dataChanges) {
 		for (IModelContentChangeListener listener : _modelContentChangeListeners) {
-			listener.modelContentChanged();
+			listener.modelContentChanged(dataChanges);
 		}
 
 		Job.getJobManager().cancel(AutoSaveJob.class);

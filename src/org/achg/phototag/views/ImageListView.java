@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.achg.phototag.generated.model.PhotoTagModel.Folder;
 import org.achg.phototag.generated.model.PhotoTagModel.Image;
+import org.achg.phototag.model.DataChangeType;
 import org.achg.phototag.model.IModelContentChangeListener;
 import org.achg.phototag.model.IModelStatusChangeListener;
 import org.achg.phototag.model.ModelManager;
@@ -87,10 +88,12 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 	}
 
 	@Override
-	public void modelContentChanged() {
+	public void modelContentChanged(List<DataChangeType> types) {
 		_sync.asyncExec(new Runnable() {
 			@Override
 			public void run() {
+				
+				if (types.contains(DataChangeType.ADD_FOLDER)|| types.contains(DataChangeType.ADD_IMAGE))
 				_treeViewer.refresh();
 				_treeViewer.expandToLevel(3);
 				

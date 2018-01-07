@@ -1,5 +1,8 @@
 package org.achg.phototag.views;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -7,6 +10,7 @@ import org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelFactory;
 import org.achg.phototag.generated.model.PhotoTagModel.Tag;
 import org.achg.phototag.generated.model.PhotoTagModel.TagCategory;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
+import org.achg.phototag.model.DataChangeType;
 import org.achg.phototag.model.DataModifier;
 import org.achg.phototag.model.IModelContentChangeListener;
 import org.achg.phototag.model.ModelManager;
@@ -291,12 +295,15 @@ public class TagsManagerView implements IModelContentChangeListener {
 		EObject selection = (EObject) _editText.getData();
 		if (selection instanceof TagCategory) {
 			((TagCategory) selection).setName(_editText.getText());
+			ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.MODIFY_CATEGORY));
 		} else if (selection instanceof Tag) {
 			((Tag) selection).setName(_editText.getText());
+			ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.MODIFY_TAG));
 		} else if (selection instanceof TagValue) {
 			((TagValue) selection).setValue(_editText.getText());
+			ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.MODIFY_VALUE));
 		}
-		ModelManager.getInstance().notifyModelContentChangeListeners();
+		
 	}
 
 	private void processTreeSelection(EObject selection) {
@@ -363,7 +370,7 @@ public class TagsManagerView implements IModelContentChangeListener {
 	}
 
 	@Override
-	public void modelContentChanged() {
+	public void modelContentChanged(List<DataChangeType> modTypes) {
 
 		_sync.asyncExec(new Runnable() {
 
