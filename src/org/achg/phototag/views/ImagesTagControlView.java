@@ -23,6 +23,7 @@ import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -32,6 +33,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
 
 public class ImagesTagControlView implements IModelContentChangeListener
 {
@@ -130,6 +132,16 @@ public class ImagesTagControlView implements IModelContentChangeListener
 		_tableViewer.setComparator(new TagValueComparator());
 		_tableViewer.setContentProvider(new ArrayContentProvider());
 		_tableViewer.setLabelProvider(new ImagesModelLabelProvider());
+		Table table = (Table)_tableViewer.getControl();
+		table.addSelectionListener(new SelectionAdapter()
+		{
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				processTableSelection();
+			}
+
+		});
 
 		Button deleteTagValue = new Button(viewParent, SWT.NONE);
 		deleteTagValue.setText("Delete");
@@ -157,6 +169,50 @@ public class ImagesTagControlView implements IModelContentChangeListener
 
 		ModelManager.getInstance().addModelContentChangeListener(this);
 	}
+
+	private void processTableSelection()
+	{
+		TagValue selectedValue = (TagValue)((IStructuredSelection)_tableViewer.getSelection()).getFirstElement();
+		TagCategory cat = (TagCategory)selectedValue.getTag().eContainer();
+		_catCombo.select(ModelManager.getInstance().getModel().getTagCategoriesList().indexOf(cat));
+		
+		populateTagCombo();
+		
+		
+		_tagCombo.select(cat.getTagsList().indexOf(selectedValue.getTag()));
+		
+		populateTagValueCombo();
+		
+		int i=0;
+		for (String contender: _valueCombo.getItems())
+		{
+			if (contender.equals(selectedValue.getValue()))
+			{
+				_valueCombo.select(i);
+				break;
+			}
+			i++;
+		}
+		
+		populateSubCombo();
+		
+		if (selectedValue.getSubTag()!= null)
+		{
+		_subCombo.select(selectedValue.getTag().getSubTagList().indexOf(selectedValue.getSubTag()));
+		populateSubValueCombo();
+		
+		i=0;
+		for (String contender: _subValueCombo.getItems())
+		{
+			if (contender.equals(selectedValue.getSubValue()))
+			{
+				_subValueCombo.select(i);
+				break;
+			}
+			i++;
+		}
+		}
+		}
 
 	private void addTag()
 	{
