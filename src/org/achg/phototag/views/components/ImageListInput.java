@@ -6,31 +6,32 @@ import org.achg.phototag.generated.model.PhotoTagModel.Image;
 import org.achg.phototag.model.ModelManager;
 import org.achg.phototag.search.SearchCriteriaContainer;
 
-public class ImageListInput {
+public class ImageListInput
+{
 	private static ImageListInput _instance = null;
-	
+
 	private ImageListInput()
 	{
-		
+
 	}
-	
+
 	public static synchronized ImageListInput getInstance()
 	{
-		if (_instance==null)
+		if(_instance == null)
 		{
-			_instance= new ImageListInput();
+			_instance = new ImageListInput();
 		}
 		return _instance;
 	}
-	
+
 	public Object[] getContent()
 	{
 		List<Image> searchResults = SearchCriteriaContainer.getInstance().getResults();
-		if (searchResults!=null)
+		if(searchResults != null)
 		{
 			return searchResults.toArray(new Image[searchResults.size()]);
 		}
-		if (ModelManager.getInstance().isLoaded())
+		if(ModelManager.getInstance().isLoaded())
 		{
 			return ModelManager.getInstance().getModel().getFolders();
 		}

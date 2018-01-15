@@ -8,61 +8,62 @@ import org.achg.phototag.ui.TaggerImages;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-public class ModelLabelProvider extends LabelProvider {
+public class ModelLabelProvider extends LabelProvider
+{
 
-	
 	@Override
-	public Image getImage(Object element) {
-		if (element instanceof TagCategory)
+	public Image getImage(Object element)
+	{
+		if(element instanceof TagCategory)
 		{
 			return TaggerImages.IMG_CATEGORY16;
 		}
-		if (element instanceof Tag)
+		if(element instanceof Tag)
 		{
 			return TaggerImages.IMG_TAG16;
 		}
-		if (element instanceof TagValue)
+		if(element instanceof TagValue)
 		{
 			return TaggerImages.IMG_VALUE16;
 		}
-		if (element instanceof org.achg.phototag.generated.model.PhotoTagModel.Image)
+		if(element instanceof org.achg.phototag.generated.model.PhotoTagModel.Image)
 		{
 			return TaggerImages.IMG_IMAGE16;
 		}
-		if (element instanceof Folder)
+		if(element instanceof Folder)
 		{
 			return TaggerImages.IMG_FOLDER16;
 		}
-		
+
 		return null;
 	}
 
-	
 	@Override
-	public String getText(Object element) {
-		if (element instanceof TagCategory)
-			return ((TagCategory) element).getName();
-		if (element instanceof Tag)
-			return ((Tag) element).getName();
-		if (element instanceof TagValue)
-			return ((TagValue) element).getValue();
-		if (element instanceof org.achg.phototag.generated.model.PhotoTagModel.Image)
+	public String getText(Object element)
+	{
+		if(element instanceof TagCategory)
+			return ((TagCategory)element).getName();
+		if(element instanceof Tag)
+			return ((Tag)element).getName();
+		if(element instanceof TagValue)
+			return ((TagValue)element).getValue();
+		if(element instanceof org.achg.phototag.generated.model.PhotoTagModel.Image)
 		{
-			String name = ((org.achg.phototag.generated.model.PhotoTagModel.Image) element).getName();
-			if (name.contains("\\"))
+			String name = ((org.achg.phototag.generated.model.PhotoTagModel.Image)element).getName();
+			if(name.contains("\\"))
 			{
-				return name.substring(name.lastIndexOf('\\')+1);
+				return name.substring(name.lastIndexOf('\\') + 1);
 			}
 			return name;
 		}
-		if (element instanceof Folder)
+		if(element instanceof Folder)
 		{
-			String name = ((Folder) element).getName();
-			if (name==null)
-				name="<top>";
-			if (name.contains("\\"))
+			String name = ((Folder)element).getName();
+			if(name == null)
+				name = "<top>";
+			if(name.contains("\\"))
 			{
-				return name.substring(name.lastIndexOf('\\')+1);
+				return name.substring(name.lastIndexOf('\\') + 1);
 			}
 			return name;
 		}

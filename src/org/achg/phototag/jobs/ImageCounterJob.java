@@ -8,16 +8,19 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
-public class ImageCounterJob extends Job{
+public class ImageCounterJob extends Job
+{
 
-	public ImageCounterJob() {
+	public ImageCounterJob()
+	{
 		super("Image counter job");
-		
+
 	}
 
 	@Override
-	protected IStatus run(IProgressMonitor monitor) {
-		
+	protected IStatus run(IProgressMonitor monitor)
+	{
+
 		FolderVisitor visitor = new FolderVisitor();
 		ModelManager.getInstance().visitFolders(visitor);
 
@@ -25,21 +28,23 @@ public class ImageCounterJob extends Job{
 		ModelManager.getInstance().notifyModelStatusChangeListeners();
 		return Status.OK_STATUS;
 	}
-	
-	private class FolderVisitor implements IFolderVisitor{
-		private int _count=0;
-		
-		public int getCount ()
+
+	private class FolderVisitor implements IFolderVisitor
+	{
+		private int _count = 0;
+
+		public int getCount()
 		{
 			return _count;
 		}
 
 		@Override
-		public boolean visitFolder(Folder folder) {
+		public boolean visitFolder(Folder folder)
+		{
 			_count += folder.getImagesLength();
 			return true;
 		}
-		
+
 	}
 
 }

@@ -6,11 +6,12 @@ import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.swt.widgets.Shell;
 
-public class ScanFoldersHandler {
+public class ScanFoldersHandler
+{
 	@Execute
 	public void handle(UISynchronize sync, Shell shell)
 	{
-		ScanFoldersJob job = new ScanFoldersJob(ModelManager.getInstance().getImagesRoot()	, ModelManager.getInstance().getModel(),sync,shell);
+		ScanFoldersJob job = new ScanFoldersJob(ModelManager.getInstance().getImagesRoot(), ModelManager.getInstance().getModel(), sync, shell);
 		job.schedule();
 	}
 }

@@ -11,7 +11,8 @@ import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
-public class TaggerImages {
+public class TaggerImages
+{
 	private static ImageRegistry _imageRegistry = JFaceResources.getImageRegistry(); // ideally replace with e4
 																						// ResourcePool usage
 	private final static String ICONS_PATH = "$nl$/icons/"; //$NON-NLS-1$
@@ -36,26 +37,29 @@ public class TaggerImages {
 	public static final ImageDescriptor DESC_FOLDER16 = getImageDescriptor(FOLDER16);
 	public static final ImageDescriptor DESC_IMAGE16 = getImageDescriptor(IMAGE16);
 	public static final ImageDescriptor DESC_SAVECOPY16 = getImageDescriptor(SAVECOPY16);
-	
-	private static boolean _initialized=false;
 
-	public static void initialize() {
-		ImageRegistry reg =JFaceResources.getImageRegistry() ;
+	private static boolean _initialized = false;
+
+	public static void initialize()
+	{
+		ImageRegistry reg = JFaceResources.getImageRegistry();
 		initDescription(reg, ICONS_PATH, TAG16);
 		initDescription(reg, ICONS_PATH, CATEGORY16);
 		initDescription(reg, ICONS_PATH, VALUE16);
 		initDescription(reg, ICONS_PATH, FOLDER16);
 		initDescription(reg, ICONS_PATH, IMAGE16);
 		initDescription(reg, ICONS_PATH, SAVECOPY16);
-		_initialized=true;
+		_initialized = true;
 	}
 
-	private static void initDescription(ImageRegistry reg, String location, String name) {
+	private static void initDescription(ImageRegistry reg, String location, String name)
+	{
 		ImageDescriptor desc = getDescriptor(location + name);
 		reg.put(name, desc);
 	}
 
-	private static ImageDescriptor getDescriptor(String name) {
+	private static ImageDescriptor getDescriptor(String name)
+	{
 		Bundle bundle = FrameworkUtil.getBundle(TaggerImages.class);
 		// use the org.eclipse.core.runtime.Path as import
 		URL url = FileLocator.find(bundle, new Path(name), null);
@@ -69,8 +73,9 @@ public class TaggerImages {
 	 *            Name of image to return
 	 * @return The image
 	 */
-	private static Image getImage(String symbolicName) {
-		if (!_initialized)
+	private static Image getImage(String symbolicName)
+	{
+		if(!_initialized)
 			initialize();
 		return _imageRegistry.get(symbolicName);
 	}
@@ -82,7 +87,8 @@ public class TaggerImages {
 	 *            Name of image descriptor to return
 	 * @return The image descriptor
 	 */
-	private static ImageDescriptor getImageDescriptor(String symbolicName) {
+	private static ImageDescriptor getImageDescriptor(String symbolicName)
+	{
 		return _imageRegistry.getDescriptor(symbolicName);
 	}
 

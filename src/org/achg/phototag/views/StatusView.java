@@ -16,13 +16,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public class StatusView implements IModelStatusChangeListener {
+public class StatusView implements IModelStatusChangeListener
+{
 
 	private Label _currentStatusLabel;
 	private UISynchronize _sync;
 
 	@Inject
-	public void create(Composite parent, Shell shell, UISynchronize sync) {
+	public void create(Composite parent, Shell shell, UISynchronize sync)
+	{
 		_sync = sync;
 		Composite compo = new Composite(parent, SWT.BORDER | SWT.FILL);
 		GridLayout layout = new GridLayout(2, false);
@@ -40,23 +42,28 @@ public class StatusView implements IModelStatusChangeListener {
 	}
 
 	@Override
-	public void modelStatusChanged() {
-		if (ModelManager.getInstance().isLoaded()) {
-			String message = String.format("Attached to: %s - %d images",
-					ModelManager.getInstance().getImagesRoot().getAbsolutePath(),
+	public void modelStatusChanged()
+	{
+		if(ModelManager.getInstance().isLoaded())
+		{
+			String message = String.format("Attached to: %s - %d images", ModelManager.getInstance().getImagesRoot().getAbsolutePath(),
 					ModelManager.getInstance().getModel().getImageCount());
 			_currentStatusLabel.setText(message);
-		} else
+		}
+		else
 			_currentStatusLabel.setText("Not attached to images");
 		_currentStatusLabel.requestLayout();
 	}
 
 	@Override
-	public void statusMessage(String message) {
-		_sync.asyncExec(new Runnable() {
+	public void statusMessage(String message)
+	{
+		_sync.asyncExec(new Runnable()
+		{
 
 			@Override
-			public void run() {
+			public void run()
+			{
 
 				_currentStatusLabel.setText(message);
 				_currentStatusLabel.requestLayout();
@@ -67,20 +74,24 @@ public class StatusView implements IModelStatusChangeListener {
 		new MessageResetJob().schedule(30 * 1000); // 30 seconds
 	}
 
-	private class MessageResetJob extends Job {
+	private class MessageResetJob extends Job
+	{
 
-		public MessageResetJob() {
+		public MessageResetJob()
+		{
 			super("Message reset job");
 
 		}
 
 		@Override
-		protected IStatus run(IProgressMonitor monitor) {
+		protected IStatus run(IProgressMonitor monitor)
+		{
 			modelStatusChanged();
 			return Status.OK_STATUS;
 		}
 
-		public boolean belongsTo(Object obj) {
+		public boolean belongsTo(Object obj)
+		{
 			return obj == MessageResetJob.class;
 		}
 

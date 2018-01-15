@@ -6,16 +6,18 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
-public class AutoSaveJob extends Job {
+public class AutoSaveJob extends Job
+{
 
-	public AutoSaveJob() {
+	public AutoSaveJob()
+	{
 		super("Auto-save Job");
-		
+
 	}
-	
+
 	public boolean belongsTo(Object obj)
 	{
-		if (obj == AutoSaveJob.class)
+		if(obj == AutoSaveJob.class)
 		{
 			return true;
 		}
@@ -23,7 +25,8 @@ public class AutoSaveJob extends Job {
 	}
 
 	@Override
-	protected IStatus run(IProgressMonitor monitor) {
+	protected IStatus run(IProgressMonitor monitor)
+	{
 		ModelManager.getInstance().save();
 		ModelManager.getInstance().notifyModelStatusChangeListeners("Auto-save complete");
 		return Status.OK_STATUS;

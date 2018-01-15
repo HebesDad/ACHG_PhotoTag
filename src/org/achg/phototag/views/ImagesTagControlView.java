@@ -175,44 +175,43 @@ public class ImagesTagControlView implements IModelContentChangeListener
 		TagValue selectedValue = (TagValue)((IStructuredSelection)_tableViewer.getSelection()).getFirstElement();
 		TagCategory cat = (TagCategory)selectedValue.getTag().eContainer();
 		_catCombo.select(ModelManager.getInstance().getModel().getTagCategoriesList().indexOf(cat));
-		
+
 		populateTagCombo();
-		
-		
+
 		_tagCombo.select(cat.getTagsList().indexOf(selectedValue.getTag()));
-		
+
 		populateTagValueCombo();
-		
-		int i=0;
-		for (String contender: _valueCombo.getItems())
+
+		int i = 0;
+		for(String contender : _valueCombo.getItems())
 		{
-			if (contender.equals(selectedValue.getValue()))
+			if(contender.equals(selectedValue.getValue()))
 			{
 				_valueCombo.select(i);
 				break;
 			}
 			i++;
 		}
-		
+
 		populateSubCombo();
-		
-		if (selectedValue.getSubTag()!= null)
+
+		if(selectedValue.getSubTag() != null)
 		{
-		_subCombo.select(selectedValue.getTag().getSubTagList().indexOf(selectedValue.getSubTag()));
-		populateSubValueCombo();
-		
-		i=0;
-		for (String contender: _subValueCombo.getItems())
-		{
-			if (contender.equals(selectedValue.getSubValue()))
+			_subCombo.select(selectedValue.getTag().getSubTagList().indexOf(selectedValue.getSubTag()));
+			populateSubValueCombo();
+
+			i = 0;
+			for(String contender : _subValueCombo.getItems())
 			{
-				_subValueCombo.select(i);
-				break;
+				if(contender.equals(selectedValue.getSubValue()))
+				{
+					_subValueCombo.select(i);
+					break;
+				}
+				i++;
 			}
-			i++;
 		}
-		}
-		}
+	}
 
 	private void addTag()
 	{

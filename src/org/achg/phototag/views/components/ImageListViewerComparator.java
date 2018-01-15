@@ -5,19 +5,25 @@ import org.achg.phototag.generated.model.PhotoTagModel.Image;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 
-public class ImageListViewerComparator extends ViewerComparator {
-	public int compare(Viewer viewer, Object o1, Object o2) {
-		if (o1 instanceof Folder && o2 instanceof Image) {
+public class ImageListViewerComparator extends ViewerComparator
+{
+	public int compare(Viewer viewer, Object o1, Object o2)
+	{
+		if(o1 instanceof Folder && o2 instanceof Image)
+		{
 			return -1;
 		}
-		if (o2 instanceof Folder && o1 instanceof Image) {
+		if(o2 instanceof Folder && o1 instanceof Image)
+		{
 			return 1;
 		}
-		if (o1 instanceof Folder && o2 instanceof Folder) {
-			return ((Folder) o1).getName().compareTo((((Folder) o2).getName()));
+		if(o1 instanceof Folder && o2 instanceof Folder)
+		{
+			return ((Folder)o1).getName().compareTo((((Folder)o2).getName()));
 		}
-		if (o1 instanceof Image && o2 instanceof Image) {
-			return ((Image) o1).getName().compareTo((((Image) o2).getName()));
+		if(o1 instanceof Image && o2 instanceof Image)
+		{
+			return ((Image)o1).getName().compareTo((((Image)o2).getName()));
 		}
 		// should not get here
 		return 0;

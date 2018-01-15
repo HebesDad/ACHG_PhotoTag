@@ -13,28 +13,40 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
-public class FileUtil {
+public class FileUtil
+{
 
-	public static void copyFile(Root modelRoot,String fromFile, String toFile) {
+	/**
+	 * Copy a file from place to place
+	 * @param modelRoot the model root
+	 * @param fromFile full path of where to copy from
+	 * @param toFile full path of where to copy to
+	 */
+	public static void copyFile(Root modelRoot, String fromFile, String toFile)
+	{
 		// Obtain a new resource set
 		ResourceSet resSet = new ResourceSetImpl();
 
 		// create a resource
 		Resource resource = resSet.createResource(URI.createURI("file://" + fromFile.replace('\\', '/')));
-		
+
 		resource.getContents().add(modelRoot);
 
-		try (OutputStream os = new FileOutputStream(new File(toFile))) {
+		try (OutputStream os = new FileOutputStream(new File(toFile)))
+		{
 			Files.copy(new File(fromFile).toPath(), os);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		}
+		catch(IOException e)
+		{
 			e.printStackTrace();
 		}
 		// now save the content.
-		try {
+		try
+		{
 			resource.save(Collections.EMPTY_MAP);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		}
+		catch(IOException e)
+		{
 			e.printStackTrace();
 		}
 	}

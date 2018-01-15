@@ -28,7 +28,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-public class SearchCriteriaView implements IModelContentChangeListener {
+public class SearchCriteriaView implements IModelContentChangeListener
+{
 	Combo _catCombo;
 	Combo _tagCombo;
 	Combo _tagValueCombo;
@@ -38,7 +39,8 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 	UISynchronize _sync;
 
 	@PostConstruct
-	public void create(Composite viewParent, EPartService partService, UISynchronize sync) {
+	public void create(Composite viewParent, EPartService partService, UISynchronize sync)
+	{
 		_sync = sync;
 		GridLayout layout = new GridLayout(2, false);
 		viewParent.setLayout(layout);
@@ -58,9 +60,11 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 
 		_catCombo = new Combo(viewParent, SWT.NONE);
 		_catCombo.setLayoutData(gd);
-		_catCombo.addSelectionListener(new SelectionAdapter() {
+		_catCombo.addSelectionListener(new SelectionAdapter()
+		{
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e)
+			{
 				populateCombos(false, true, true, true, true);
 			}
 		});
@@ -68,9 +72,11 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 		_tagCombo = new Combo(viewParent, SWT.NONE);
 		gd = new GridData(SWT.LEFT, SWT.TOP, true, false);
 		_tagCombo.setLayoutData(gd);
-		_tagCombo.addSelectionListener(new SelectionAdapter() {
+		_tagCombo.addSelectionListener(new SelectionAdapter()
+		{
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e)
+			{
 				populateCombos(false, false, true, true, true);
 			}
 		});
@@ -79,9 +85,11 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 		gd = new GridData(SWT.LEFT, SWT.TOP, true, false);
 		_tagValueCombo.setLayoutData(gd);
 
-		_tagValueCombo.addSelectionListener(new SelectionAdapter() {
+		_tagValueCombo.addSelectionListener(new SelectionAdapter()
+		{
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e)
+			{
 				populateCombos(false, false, true, false, true);
 			}
 		});
@@ -89,9 +97,11 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 		_subTagCombo = new Combo(viewParent, SWT.NONE);
 		gd = new GridData(SWT.LEFT, SWT.TOP, true, false);
 		_subTagCombo.setLayoutData(gd);
-		_subTagCombo.addSelectionListener(new SelectionAdapter() {
+		_subTagCombo.addSelectionListener(new SelectionAdapter()
+		{
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e)
+			{
 				populateCombos(false, false, false, true, true);
 			}
 		});
@@ -105,17 +115,19 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 		Button addButton = new Button(viewParent, SWT.NONE);
 		addButton.setText("Add");
 		addButton.setToolTipText("Add selected search criteria from above");
-		addButton.addSelectionListener(new SelectionAdapter() {
+		addButton.addSelectionListener(new SelectionAdapter()
+		{
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e)
+			{
 				// todo
 				TagValue criteria = PhotoTagModelFactory.eINSTANCE.createTagValue();
 
-				criteria.setTag(ModelManager.getInstance().getModel().getTagCategories()[_catCombo.getSelectionIndex()]
-						.getTags(_tagCombo.getSelectionIndex()));
+				criteria.setTag(ModelManager.getInstance().getModel().getTagCategories()[_catCombo.getSelectionIndex()].getTags(_tagCombo.getSelectionIndex()));
 				criteria.setValue(_tagValueCombo.getText());
 
-				if (!_subTagValueCombo.getText().equals("<any>")) {
+				if(!_subTagValueCombo.getText().equals("<any>"))
+				{
 					criteria.setSubTag(criteria.getTag().getSubTag(_subTagCombo.getSelectionIndex()));
 					criteria.setSubValue(_subTagValueCombo.getText());
 				}
@@ -132,12 +144,16 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 		Button deleteButton = new Button(viewParent, SWT.NONE);
 		deleteButton.setText("Delete");
 		deleteButton.setToolTipText("Delete selected criteria from below");
-		deleteButton.addSelectionListener(new SelectionAdapter() {
+		deleteButton.addSelectionListener(new SelectionAdapter()
+		{
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				for (Object obj : _selectedTableViewer.getStructuredSelection().toList()) {
-					if (obj instanceof TagValue) {
-						SearchCriteriaContainer.getInstance().removeCriteria((TagValue) obj);
+			public void widgetSelected(SelectionEvent e)
+			{
+				for(Object obj : _selectedTableViewer.getStructuredSelection().toList())
+				{
+					if(obj instanceof TagValue)
+					{
+						SearchCriteriaContainer.getInstance().removeCriteria((TagValue)obj);
 
 					}
 				}
@@ -148,8 +164,7 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 			}
 		});
 
-		_selectedTableViewer = new TableViewer(viewParent,
-				SWT.FILL | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+		_selectedTableViewer = new TableViewer(viewParent, SWT.FILL | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.horizontalSpan = 2;
 
@@ -163,37 +178,41 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 		ModelManager.getInstance().addModelContentChangeListener(this);
 	}
 
-	private void populateCombos(boolean cats, boolean tags, boolean subtags, boolean tagvalues, boolean subtagvalues) {
-		if (ModelManager.getInstance().isLoaded()) {
-			if (cats) {
+	private void populateCombos(boolean cats, boolean tags, boolean subtags, boolean tagvalues, boolean subtagvalues)
+	{
+		if(ModelManager.getInstance().isLoaded())
+		{
+			if(cats)
+			{
 				_catCombo.setItems(ModelManager.getCategories());
 				_catCombo.select(0);
 			}
 
-			if (tags) {
+			if(tags)
+			{
 				_tagCombo.setItems(ModelManager.getTags(_catCombo.getSelectionIndex()));
 				_tagCombo.select(0);
 				_tagCombo.requestLayout();
 
 			}
-			if (tagvalues) {
-				_tagValueCombo.setItems(ModelManager.getTagValues(_catCombo.getSelectionIndex(),
-						_tagCombo.getSelectionIndex(), "<unset>"));
+			if(tagvalues)
+			{
+				_tagValueCombo.setItems(ModelManager.getTagValues(_catCombo.getSelectionIndex(), _tagCombo.getSelectionIndex(), "<unset>"));
 				_tagValueCombo.select(0);
 				_tagValueCombo.requestLayout();
 			}
 
-			if (subtags) {
-				_subTagCombo.setItems(
-						ModelManager.getSubsTags(_catCombo.getSelectionIndex(), _tagCombo.getSelectionIndex()));
+			if(subtags)
+			{
+				_subTagCombo.setItems(ModelManager.getSubsTags(_catCombo.getSelectionIndex(), _tagCombo.getSelectionIndex()));
 				_subTagCombo.select(0);
 				_subTagCombo.requestLayout();
 			}
 
-			if (subtagvalues) {
-				_subTagValueCombo.setItems(
-						ModelManager.getSubValues(_catCombo.getSelectionIndex(), _tagCombo.getSelectionIndex(),
-								_subTagCombo.getSelectionIndex(), _tagValueCombo.getText().trim(), "<any>", "<unset>"));
+			if(subtagvalues)
+			{
+				_subTagValueCombo.setItems(ModelManager.getSubValues(_catCombo.getSelectionIndex(), _tagCombo.getSelectionIndex(),
+						_subTagCombo.getSelectionIndex(), _tagValueCombo.getText().trim(), "<any>", "<unset>"));
 				_subTagValueCombo.select(0);
 				_subTagValueCombo.requestLayout();
 			}
@@ -202,14 +221,15 @@ public class SearchCriteriaView implements IModelContentChangeListener {
 	}
 
 	@Override
-	public void modelContentChanged(List<DataChangeType> modTypes) {
-		_sync.asyncExec(new Runnable() {
+	public void modelContentChanged(List<DataChangeType> modTypes)
+	{
+		_sync.asyncExec(new Runnable()
+		{
 
 			@Override
-			public void run() {
-				populateCombos(
-						modTypes.contains(DataChangeType.ADD_CATEGORY)
-								|| modTypes.contains(DataChangeType.MODIFY_CATEGORY),
+			public void run()
+			{
+				populateCombos(modTypes.contains(DataChangeType.ADD_CATEGORY) || modTypes.contains(DataChangeType.MODIFY_CATEGORY),
 						modTypes.contains(DataChangeType.ADD_TAG) || modTypes.contains(DataChangeType.MODIFY_TAG),
 						modTypes.contains(DataChangeType.ADD_SUBTAG) || modTypes.contains(DataChangeType.MODIFY_TAG),
 						modTypes.contains(DataChangeType.ADD_VALUE) || modTypes.contains(DataChangeType.MODIFY_VALUE),

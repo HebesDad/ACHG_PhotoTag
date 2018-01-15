@@ -1,5 +1,6 @@
 package org.achg.phototag.model;
 
-public enum DataChangeType {
+public enum DataChangeType
+{
 	ADD_CATEGORY, ADD_FOLDER, ADD_IMAGE, ADD_TAG, ADD_SUBTAG, ADD_VALUE, MODIFY_TAG, MODIFY_SUBTAG, MODIFY_VALUE, REMOVE_VALUE, VALUE_USAGE, MODIFY_CATEGORY;
 }
