@@ -195,8 +195,8 @@ public class ImagesTagControlView implements IModelContentChangeListener
 
 		populateSubCombo();
 
-		if(selectedValue.getSubTag() != null)
-		{
+		//even if we have no sub tag, the combo may have been set previously with sub tag values, so we need to refresh
+
 			_subCombo.select(selectedValue.getTag().getSubTagList().indexOf(selectedValue.getSubTag()));
 			populateSubValueCombo();
 
@@ -210,7 +210,7 @@ public class ImagesTagControlView implements IModelContentChangeListener
 				}
 				i++;
 			}
-		}
+
 	}
 
 	private void addTag()
