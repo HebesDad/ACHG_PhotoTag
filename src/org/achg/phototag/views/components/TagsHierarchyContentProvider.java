@@ -36,12 +36,24 @@ public class TagsHierarchyContentProvider implements ITreeContentProvider
 				result.add(subtag);
 			}
 
-			// probably a bit more to do here with subtags and their values
+			
 			for(TagValue value : ModelManager.getInstance().getModel().getValues())
 			{
-				if(value.getTag() == parentElement)
+				if(((Tag)parentElement).eContainer() instanceof Tag)
 				{
-					result.add(value);
+					// sub tag
+					if(value.getTag() == ((Tag)parentElement).eContainer() && value.getSubTag() == parentElement)
+					{
+						result.add(value);
+					}
+				}
+				else
+				{
+					// primary tag
+					if(value.getTag() == parentElement && value.getSubTag() == null)
+					{
+						result.add(value);
+					}
 				}
 			}
 			return result.toArray();

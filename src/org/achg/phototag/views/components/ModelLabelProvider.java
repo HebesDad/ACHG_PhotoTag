@@ -46,7 +46,13 @@ public class ModelLabelProvider extends LabelProvider
 		if(element instanceof Tag)
 			return ((Tag)element).getName();
 		if(element instanceof TagValue)
+		{
+			if (((TagValue)element).getSubTag()!=null)
+			{
+				return ((TagValue)element).getValue() + ", " + ((TagValue)element).getSubValue();
+			}
 			return ((TagValue)element).getValue();
+		}
 		if(element instanceof org.achg.phototag.generated.model.PhotoTagModel.Image)
 		{
 			String name = ((org.achg.phototag.generated.model.PhotoTagModel.Image)element).getName();
