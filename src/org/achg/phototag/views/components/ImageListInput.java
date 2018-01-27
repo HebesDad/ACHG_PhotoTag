@@ -6,6 +6,9 @@ import org.achg.phototag.generated.model.PhotoTagModel.Image;
 import org.achg.phototag.model.ModelManager;
 import org.achg.phototag.search.SearchCriteriaContainer;
 
+/**
+ * Image list input
+ */
 public class ImageListInput
 {
 	private static ImageListInput _instance = null;
@@ -15,6 +18,11 @@ public class ImageListInput
 
 	}
 
+	/**
+	 * Get the singleton instance of the image list input
+	 * 
+	 * @return the singleton instance
+	 */
 	public static synchronized ImageListInput getInstance()
 	{
 		if(_instance == null)
@@ -24,6 +32,11 @@ public class ImageListInput
 		return _instance;
 	}
 
+	/**
+	 * Get the image list content
+	 * 
+	 * @return the image list content
+	 */
 	public Object[] getContent()
 	{
 		List<Image> searchResults = SearchCriteriaContainer.getInstance().getResults();
@@ -35,7 +48,7 @@ public class ImageListInput
 		{
 			return ModelManager.getInstance().getModel().getFolders();
 		}
-		return new Object[] {};
+		return new Object[0];
 	}
 
 }

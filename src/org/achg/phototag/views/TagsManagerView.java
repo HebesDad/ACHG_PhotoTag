@@ -34,32 +34,46 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * View for managing tags
+ */
 public class TagsManagerView implements IModelContentChangeListener
 {
-	TreeViewer _treeViewer;
-	Text _editText;
-	Button _saveEditButton;
-	Text _addCategoryText;
-	Button _saveAddCategoryButton;
-	Text _addTagText;
-	Button _saveAddTagButton;
-	Text _addSubtagText;
-	Button _saveAddSubtagButton;
-	Text _addValueText;
-	Text _addSubValueText;
-	Button _saveAddValueButton;
-	Shell _shell;
+	private TreeViewer _treeViewer;
+	private Text _editText;
+	private Button _saveEditButton;
+	private Text _addCategoryText;
+	private Button _saveAddCategoryButton;
+	private Text _addTagText;
+	private Button _saveAddTagButton;
+	private Text _addSubtagText;
+	private Button _saveAddSubtagButton;
+	private Text _addValueText;
+	private Text _addSubValueText;
+	private Button _saveAddValueButton;
+	private Shell _shell;
 
 	private UISynchronize _sync;
 
-	DataModifier _modifier = new DataModifier();
+	private DataModifier _modifier = new DataModifier();
 
+	/**
+	 * Constructor
+	 * 
+	 * @param sync the UI synchronisation object
+	 */
 	@Inject
 	public TagsManagerView(UISynchronize sync)
 	{
 		_sync = sync;
 	}
 
+	/**
+	 * Create the UI components
+	 * 
+	 * @param shell the main shell
+	 * @param viewParent the parent composite
+	 */
 	@PostConstruct
 	public void create(Shell shell, Composite viewParent)
 	{
@@ -87,7 +101,6 @@ public class TagsManagerView implements IModelContentChangeListener
 			@Override
 			public void selectionChanged(SelectionChangedEvent event)
 			{
-				// TODO Auto-generated method stub
 				processTreeSelection((EObject)event.getStructuredSelection().getFirstElement());
 			}
 		});
@@ -153,7 +166,6 @@ public class TagsManagerView implements IModelContentChangeListener
 			{
 				addCategory();
 			}
-
 		});
 
 		new Label(addGroup, SWT.NONE).setText("Tag:");
@@ -174,7 +186,6 @@ public class TagsManagerView implements IModelContentChangeListener
 			{
 				addTag();
 			}
-
 		});
 
 		new Label(addGroup, SWT.NONE).setText("Subtag:");
@@ -195,7 +206,6 @@ public class TagsManagerView implements IModelContentChangeListener
 			{
 				addSubtag();
 			}
-
 		});
 
 		new Label(addGroup, SWT.NONE).setText("Value:");
@@ -221,11 +231,9 @@ public class TagsManagerView implements IModelContentChangeListener
 			{
 				addValue();
 			}
-
 		});
 
 		ModelManager.getInstance().addModelContentChangeListener(this);
-		// viewParent.requestLayout();
 		processTreeSelection(null);
 	}
 
@@ -243,7 +251,6 @@ public class TagsManagerView implements IModelContentChangeListener
 		_modifier.addCategory(_shell, cat);
 
 		_addCategoryText.setText("");
-
 	}
 
 	private void addTag()
@@ -263,7 +270,6 @@ public class TagsManagerView implements IModelContentChangeListener
 		_modifier.addTag(_shell, cat, newtag);
 
 		_addTagText.setText("");
-
 	}
 
 	private void addSubtag()
@@ -282,7 +288,6 @@ public class TagsManagerView implements IModelContentChangeListener
 		_modifier.addSubTag(_shell, cat, newtag);
 
 		_addSubtagText.setText("");
-
 	}
 
 	private void addValue()
@@ -334,7 +339,6 @@ public class TagsManagerView implements IModelContentChangeListener
 			((TagValue)selection).setValue(_editText.getText());
 			ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.MODIFY_VALUE));
 		}
-
 	}
 
 	private void processTreeSelection(EObject selection)
@@ -415,7 +419,6 @@ public class TagsManagerView implements IModelContentChangeListener
 	@Override
 	public void modelContentChanged(List<DataChangeType> modTypes)
 	{
-
 		_sync.asyncExec(new Runnable()
 		{
 
@@ -426,6 +429,5 @@ public class TagsManagerView implements IModelContentChangeListener
 				_treeViewer.refresh();
 			}
 		});
-
 	}
 }

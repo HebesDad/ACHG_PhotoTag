@@ -13,11 +13,15 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
+/**
+ * File manipulation utilities
+ */
 public class FileUtil
 {
 
 	/**
 	 * Copy a file from place to place
+	 * 
 	 * @param modelRoot the model root
 	 * @param fromFile full path of where to copy from
 	 * @param toFile full path of where to copy to

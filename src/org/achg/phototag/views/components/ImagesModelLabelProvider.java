@@ -6,19 +6,20 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+/**
+ * Label provider for the images list
+ */
 public class ImagesModelLabelProvider extends LabelProvider
 {
 	@Override
 	public Image getImage(Object element)
 	{
-
 		return null;
 	}
 
 	@Override
 	public String getText(Object element)
 	{
-
 		if(element instanceof TagValue)
 		{
 			TagValue value = (TagValue)element;

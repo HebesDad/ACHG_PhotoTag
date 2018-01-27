@@ -8,24 +8,31 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
+/**
+ * Job for counting the number of images under the root folder
+ */
 public class ImageCounterJob extends Job
 {
-
+	/**
+	 * Constructor
+	 */
 	public ImageCounterJob()
 	{
 		super("Image counter job");
-
 	}
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor)
 	{
-
 		FolderVisitor visitor = new FolderVisitor();
-		ModelManager.getInstance().visitFolders(visitor);
 
-		ModelManager.getInstance().getModel().setImageCount(visitor.getCount());
-		ModelManager.getInstance().notifyModelStatusChangeListeners();
+		ModelManager manager = ModelManager.getInstance();
+
+		manager.visitFolders(visitor);
+
+		manager.getModel().setImageCount(visitor.getCount());
+		manager.notifyModelStatusChangeListeners();
+
 		return Status.OK_STATUS;
 	}
 
@@ -44,7 +51,5 @@ public class ImageCounterJob extends Job
 			_count += folder.getImagesLength();
 			return true;
 		}
-
 	}
-
 }

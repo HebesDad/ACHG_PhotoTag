@@ -23,20 +23,26 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.Resource.Factory.Registry;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
+/**
+ * Manager for the model
+ */
 public class ModelManager
 {
+	private static final String TAGFILE = "phototags.xmi";
+
 	private static ModelManager _instance = null;
+
 	private boolean _modelLoaded = false;
 	private File _imagesRootFolder;
 	private List<IModelStatusChangeListener> _modelStatusChangeListeners = new ArrayList<>();
 	private List<IModelContentChangeListener> _modelContentChangeListeners = new ArrayList<>();
-	private static final String TAGFILE = "phototags.xmi";
 	private Root _modelRoot = null;
 	private String _pathToXmi;
 
@@ -44,14 +50,19 @@ public class ModelManager
 	{
 		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode("org.achg.phototag");
 
-		Preferences sub1 = preferences.node("root");
-		String folder = sub1.get("selectedFolder", null);
+		Preferences rootPreferences = preferences.node("root");
+		String folder = rootPreferences.get("selectedFolder", null);
 		if(folder != null)
 		{
 			setRootFolder(folder);
 		}
 	}
 
+	/**
+	 * Get the singleton instance of the model manager
+	 * 
+	 * @return the singleton instance
+	 */
 	public static synchronized ModelManager getInstance()
 	{
 		if(_instance == null)
@@ -62,20 +73,35 @@ public class ModelManager
 		return _instance;
 	}
 
+	/**
+	 * Get whether the model has been loaded
+	 * 
+	 * @return {@code true} if loaded, otherwise {@code false}
+	 */
 	public boolean isLoaded()
 	{
 		return _modelLoaded;
 	}
 
+	/**
+	 * Get the root folder which contains all the images
+	 * 
+	 * @return the root folder
+	 */
 	public File getImagesRoot()
 	{
 		return _imagesRootFolder;
 	}
 
+	/**
+	 * Set the root folder which contains all the images
+	 * 
+	 * @param selectedFolder the root folder
+	 */
 	public void setRootFolder(String selectedFolder)
 	{
 		_imagesRootFolder = new File(selectedFolder);
-		_pathToXmi = selectedFolder + "\\" + TAGFILE;
+		_pathToXmi = selectedFolder + '\\' + TAGFILE;
 		File xmiFile = new File(_pathToXmi);
 		if(!xmiFile.exists())
 		{
@@ -88,13 +114,16 @@ public class ModelManager
 
 		}
 		_modelLoaded = true;
+
 		notifyModelStatusChangeListeners();
+
 		List<DataChangeType> types = new ArrayList<>();
 		types.add(DataChangeType.ADD_FOLDER);
 		types.add(DataChangeType.ADD_IMAGE);
 		types.add(DataChangeType.ADD_TAG);
 		types.add(DataChangeType.ADD_SUBTAG);
 		types.add(DataChangeType.ADD_VALUE);
+
 		notifyModelContentChangeListeners(types);
 
 		storeSelectedFolder(selectedFolder);
@@ -104,9 +133,9 @@ public class ModelManager
 	{
 		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode("org.achg.phototag");
 
-		Preferences sub1 = preferences.node("root");
+		Preferences rootPreferences = preferences.node("root");
 
-		sub1.put("selectedFolder", selectedFolder);
+		rootPreferences.put("selectedFolder", selectedFolder);
 		try
 		{
 			// forces the application to save the preferences
@@ -120,15 +149,15 @@ public class ModelManager
 
 	private Root loadModel()
 	{
-		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-		Map<String, Object> m = reg.getExtensionToFactoryMap();
-		m.put("xmi", new XMIResourceFactoryImpl());
+		Registry registry = Registry.INSTANCE;
+		Map<String, Object> map = registry.getExtensionToFactoryMap();
+		map.put("xmi", new XMIResourceFactoryImpl());
 
 		// Obtain a new resource set
-		ResourceSet resSet = new ResourceSetImpl();
+		ResourceSet resourceSet = new ResourceSetImpl();
 
 		// Get the resource
-		Resource resource = resSet.getResource(URI.createURI("file://" + _pathToXmi.replace('\\', '/')), true);
+		Resource resource = resourceSet.getResource(URI.createURI("file://" + _pathToXmi.replace('\\', '/')), true);
 
 		Root myWeb = (Root)resource.getContents().get(0);
 
@@ -140,6 +169,9 @@ public class ModelManager
 		return myWeb;
 	}
 
+	/**
+	 * Notify all the registered model status change listeners
+	 */
 	public void notifyModelStatusChangeListeners()
 	{
 		for(IModelStatusChangeListener listener : _modelStatusChangeListeners)
@@ -148,6 +180,11 @@ public class ModelManager
 		}
 	}
 
+	/**
+	 * Notify all the registered model status change listeners, with a message
+	 * 
+	 * @param message the message
+	 */
 	public void notifyModelStatusChangeListeners(String message)
 	{
 		for(IModelStatusChangeListener listener : _modelStatusChangeListeners)
@@ -156,6 +193,11 @@ public class ModelManager
 		}
 	}
 
+	/**
+	 * Notify all the registered model content change listeners
+	 * 
+	 * @param dataChanges a list containing the types of model changes which have occurred
+	 */
 	public void notifyModelContentChangeListeners(List<DataChangeType> dataChanges)
 	{
 		for(IModelContentChangeListener listener : _modelContentChangeListeners)
@@ -168,35 +210,58 @@ public class ModelManager
 		newJob.schedule(3 * 60 * 60 * 1000); // 3 minutes
 	}
 
+	/**
+	 * Register a new model status change listener
+	 * 
+	 * @param listener the listener
+	 */
 	public void addModelStatusChangeListener(IModelStatusChangeListener listener)
 	{
 		_modelStatusChangeListeners.add(listener);
 
 	}
 
+	/**
+	 * Unregister a model status change listener
+	 * 
+	 * @param listener the listener
+	 */
 	public void removeModelStatusChangeListener(IModelStatusChangeListener listener)
 	{
 		_modelStatusChangeListeners.remove(listener);
 	}
 
+	/**
+	 * Register a new model content change listener
+	 * 
+	 * @param listener the listener
+	 */
 	public void addModelContentChangeListener(IModelContentChangeListener listener)
 	{
 		_modelContentChangeListeners.add(listener);
 
 	}
 
+	/**
+	 * Unregister a model content change listener
+	 * 
+	 * @param listener the listener
+	 */
 	public void removeModelContentChangeListener(IModelContentChangeListener listener)
 	{
 		_modelContentChangeListeners.remove(listener);
 	}
 
+	/**
+	 * Save the model
+	 */
 	public void save()
 	{
 		if(_modelLoaded)
 		{
-			Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-			Map<String, Object> m = reg.getExtensionToFactoryMap();
-			m.put("website", new XMIResourceFactoryImpl());
+			Registry registry = Registry.INSTANCE;
+			Map<String, Object> map = registry.getExtensionToFactoryMap();
+			map.put("website", new XMIResourceFactoryImpl());
 
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d_H.m.s");
 			String datestr = format.format(Date.from(Instant.now()));
@@ -207,7 +272,6 @@ public class ModelManager
 
 	private void addDefaultsToModel(Root root)
 	{
-
 		// consider later just storing a pre-canned xmi that we could then load rather
 		// than doing it all via code
 		TagCategory categoryMeta = PhotoTagModelFactory.eINSTANCE.createTagCategory();
@@ -225,126 +289,210 @@ public class ModelManager
 		TagCategory[] categories = {categoryMeta, categoryLocation, categoryPeople, categoryEvent};
 
 		root.setTagCategories(categories);
-
 	}
 
+	/**
+	 * Get the model root
+	 * 
+	 * @return the model root
+	 */
 	public Root getModel()
 	{
 		return _modelRoot;
 	}
 
+	/**
+	 * Get the category names
+	 * 
+	 * @return an array of category names
+	 */
 	public static String[] getCategories()
 	{
-		List<String> categories = new ArrayList<>();
+		List<String> categoryNames = new ArrayList<>();
 
-		if(_instance.getModel() != null)
-			for(TagCategory cat : _instance.getModel().getTagCategoriesList())
+		Root model = _instance.getModel();
+
+		if(model != null)
+		{
+			for(TagCategory cat : model.getTagCategoriesList())
 			{
-				categories.add(cat.getName());
+				categoryNames.add(cat.getName());
 			}
-		return categories.toArray(new String[categories.size()]);
+		}
+
+		return categoryNames.toArray(new String[categoryNames.size()]);
 	}
 
+	/**
+	 * Get the tag names from a given category
+	 * 
+	 * @param selectedCategory the category to get tag names from
+	 * @return an array of tag names
+	 */
 	public static String[] getTags(int selectedCategory)
 	{
-		List<String> tagnames = new ArrayList<>();
+		List<String> tagNames = new ArrayList<>();
 
 		if(selectedCategory < 0)
-			selectedCategory = 0;
-		if(_instance.getModel() != null)
 		{
-			List<Tag> tags = _instance.getModel().getTagCategories()[selectedCategory].getTagsList();
+			selectedCategory = 0;
+		}
+
+		Root model = _instance.getModel();
+
+		if(model != null)
+		{
+			List<Tag> tags = model.getTagCategories()[selectedCategory].getTagsList();
 
 			for(Tag tag : tags)
 			{
-				tagnames.add(tag.getName());
+				tagNames.add(tag.getName());
 			}
 		}
-		return tagnames.toArray(new String[tagnames.size()]);
+
+		return tagNames.toArray(new String[tagNames.size()]);
 	}
 
-	public static String[] getTagValues(int catIndex, int tagIndex, String... additionals)
+	/**
+	 * Get the tag values for a given category and tag
+	 * 
+	 * @param categoryIndex the category index
+	 * @param tagIndex the tag index
+	 * @param additionals any additional tag values to include
+	 * @return an array of tag values
+	 */
+	public static String[] getTagValues(int categoryIndex, int tagIndex, String... additionals)
 	{
 		List<String> values = new ArrayList<>();
-		for(String addit : additionals)
+		for(String additional : additionals)
 		{
-			values.add(addit);
+			values.add(additional);
 		}
-		if(catIndex < 0)
-			catIndex = 0;
-		if(tagIndex < 0)
-			tagIndex = 0;
-		if(_instance.getModel() != null)
-		{
-			Tag tag = _instance.getModel().getTagCategories()[catIndex].getTagsList().get(tagIndex);
 
-			for(TagValue value : ModelManager.getInstance().getModel().getValuesList())
+		if(categoryIndex < 0)
+		{
+			categoryIndex = 0;
+		}
+
+		if(tagIndex < 0)
+		{
+			tagIndex = 0;
+		}
+
+		Root model = _instance.getModel();
+
+		if(model != null)
+		{
+			List<Tag> tagList = model.getTagCategories()[categoryIndex].getTagsList();
+
+			if(tagList.size() > tagIndex)
 			{
-				if(value.getTag() == tag && !values.contains(value.getValue()))
+				Tag tag = tagList.get(tagIndex);
+
+				for(TagValue value : model.getValuesList())
 				{
-					values.add(value.getValue());
+					if(value.getTag() == tag && !values.contains(value.getValue()))
+					{
+						values.add(value.getValue());
+					}
 				}
 			}
 		}
+
 		Collections.sort(values);
+
 		return values.toArray(new String[values.size()]);
 	}
 
-	public static String[] getSubsTags(int catIndex, int tagIndex)
+	/**
+	 * Get the sub-tag names for a given category and tag
+	 * 
+	 * @param categoryIndex the category index
+	 * @param tagIndex the tag index
+	 * @return an array of sub-tag names
+	 */
+	public static String[] getSubsTags(int categoryIndex, int tagIndex)
 	{
-		List<String> tagnames = new ArrayList<>();
+		List<String> subTagNames = new ArrayList<>();
 
-		if(catIndex < 0)
-			catIndex = 0;
-		if(tagIndex < 0)
-			tagIndex = 0;
-
-		if(_instance.getModel() != null)
+		if(categoryIndex < 0)
 		{
-			List<Tag> tags = _instance.getModel().getTagCategories()[catIndex].getTagsList();
-			tags = tags.get(tagIndex).getSubTagList();
+			categoryIndex = 0;
+		}
 
-			for(Tag tag : tags)
+		if(tagIndex < 0)
+		{
+			tagIndex = 0;
+		}
+
+		Root model = _instance.getModel();
+
+		if(model != null)
+		{
+			List<Tag> tags = model.getTagCategories()[categoryIndex].getTagsList();
+			List<Tag> subTags = tags.get(tagIndex).getSubTagList();
+
+			for(Tag subTag : subTags)
 			{
-				tagnames.add(tag.getName());
+				subTagNames.add(subTag.getName());
 			}
 		}
-		return tagnames.toArray(new String[tagnames.size()]);
+
+		return subTagNames.toArray(new String[subTagNames.size()]);
 	}
 
-	public static String[] getSubValues(int catIndex, int tagIndex, int subIndex, String tagValue, String... additionals)
+	/**
+	 * Get the sub-tag names for a given category, tag and sub-tag
+	 * 
+	 * @param categoryIndex the category index
+	 * @param tagIndex the tag index
+	 * @param subTagIndex the sub-tag index
+	 * @param tagValue the tag value
+	 * @param additionals any additional sub-tag values to include
+	 * @return an array of sub-tag names
+	 */
+	public static String[] getSubValues(int categoryIndex, int tagIndex, int subTagIndex, String tagValue, String... additionals)
 	{
 		List<String> values = new ArrayList<>();
 
-		for(String addit : additionals)
+		for(String additional : additionals)
 		{
-			values.add(addit);
+			values.add(additional);
 		}
 
-		if(catIndex < 0)
-			catIndex = 0;
-		if(tagIndex < 0)
-			tagIndex = 0;
-		if(subIndex < 0)
-			subIndex = 0;
-
-		if(_instance.getModel() != null)
+		if(categoryIndex < 0)
 		{
-			Tag tag = _instance.getModel().getTagCategories()[catIndex].getTagsList().get(tagIndex);
-			List<Tag> stlist = tag.getSubTagList();
+			categoryIndex = 0;
+		}
 
-			if(stlist != null && !stlist.isEmpty())
+		if(tagIndex < 0)
+		{
+			tagIndex = 0;
+		}
+
+		if(subTagIndex < 0)
+		{
+			subTagIndex = 0;
+		}
+
+		Root model = _instance.getModel();
+
+		if(model != null)
+		{
+			Tag tag = model.getTagCategories()[categoryIndex].getTagsList().get(tagIndex);
+			List<Tag> subTagList = tag.getSubTagList();
+
+			if(subTagList != null && !subTagList.isEmpty())
 			{
-				Tag subtag = stlist.get(subIndex);
+				Tag subTag = subTagList.get(subTagIndex);
 
-				for(TagValue value : _instance.getModel().getValuesList())
+				for(TagValue value : model.getValuesList())
 				{
-					if(value.getTag() == tag && value.getSubTag() == subtag && value.getSubValue() != null)
+					if(value.getTag() == tag && value.getSubTag() == subTag && value.getValue().equals(tagValue))
 					{
-						if(value.getValue().equals(tagValue))
+						if(value.getSubValue() != null && !values.contains(value.getSubValue()))
 						{
-							if(!values.contains(value.getSubValue()))
-								values.add(value.getSubValue());
+							values.add(value.getSubValue());
 						}
 					}
 				}
@@ -352,9 +500,15 @@ public class ModelManager
 		}
 
 		Collections.sort(values);
+
 		return values.toArray(new String[values.size()]);
 	}
 
+	/**
+	 * Visit the folder from the model root
+	 * 
+	 * @param visitor the folder visitor
+	 */
 	public void visitFolders(IFolderVisitor visitor)
 	{
 		innerVisitFolder(visitor, _modelRoot.getFolders());
@@ -365,10 +519,14 @@ public class ModelManager
 		for(Folder folder : folders)
 		{
 			if(!visitor.visitFolder(folder))
+			{
 				return false;
-			if(folder.getFolders() != null)
-				if(!innerVisitFolder(visitor, folder.getFolders()))
-					return false;
+			}
+
+			if(folder.getFolders() != null && !innerVisitFolder(visitor, folder.getFolders()))
+			{
+				return false;
+			}
 		}
 		return true;
 	}

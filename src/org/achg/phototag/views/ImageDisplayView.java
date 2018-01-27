@@ -24,20 +24,31 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
+/**
+ * View for displaying images
+ */
 public class ImageDisplayView
 {
-
+	/** Part ID */
 	public static final String ID = "org.achg.phototag.part.imageDisplayPart";
 
-	Label _imageNameLabel;
-	Label _imageLabel;
-	Button _saveCopyButton;
+	private Label _imageNameLabel;
+	private Label _imageLabel;
+	private Button _saveCopyButton;
 
+	/**
+	 * Create the UI components
+	 * 
+	 * @param viewParent the parent composite
+	 * @param partService the Eclipse part service
+	 * @param shell the main shell
+	 */
 	@PostConstruct
 	public void create(Composite viewParent, EPartService partService, Shell shell)
 	{
@@ -55,13 +66,15 @@ public class ImageDisplayView
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				org.eclipse.swt.widgets.FileDialog dialog = new org.eclipse.swt.widgets.FileDialog(shell);
+				FileDialog dialog = new FileDialog(shell);
 				dialog.setFileName(_imageNameLabel.getText().substring(_imageNameLabel.getText().lastIndexOf('\\') + 1));
+
+				ModelManager manager = ModelManager.getInstance();
+
 				String result = dialog.open();
 				if(result != null)
 				{
-					FileUtil.copyFile(ModelManager.getInstance().getModel(),
-							ModelManager.getInstance().getImagesRoot().getAbsolutePath() + "\\" + _imageNameLabel.getText(), result);
+					FileUtil.copyFile(manager.getModel(), manager.getImagesRoot().getAbsolutePath() + "\\" + _imageNameLabel.getText(), result);
 				}
 			}
 		});
@@ -83,6 +96,11 @@ public class ImageDisplayView
 
 	}
 
+	/**
+	 * Handle a UI selection
+	 * 
+	 * @param selection the selection
+	 */
 	@Inject
 	public void receiveSelection(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) Object selection)
 	{
@@ -91,21 +109,22 @@ public class ImageDisplayView
 			_imageNameLabel.setText(((Image)selection).getName());
 			_imageNameLabel.requestLayout();
 			_saveCopyButton.setEnabled(true);
+
 			String rootPath = ModelManager.getInstance().getImagesRoot().getAbsolutePath();
 
 			paintImage(rootPath + "\\" + ((Image)selection).getName());
 
 			IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode("org.achg.phototag");
 
-			Preferences sub1 = preferences.node("root");
-			sub1.put("selectedImage", ((Image)selection).getName());
+			Preferences rootPreferences = preferences.node("root");
+			rootPreferences.put("selectedImage", ((Image)selection).getName());
+
 			try
 			{
 				preferences.flush();
 			}
 			catch(BackingStoreException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -143,7 +162,6 @@ public class ImageDisplayView
 		}
 		catch(MalformedURLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

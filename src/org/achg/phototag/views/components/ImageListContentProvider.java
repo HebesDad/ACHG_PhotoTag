@@ -8,6 +8,9 @@ import org.achg.phototag.generated.model.PhotoTagModel.Image;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
+/**
+ * Image list tree content provider
+ */
 public class ImageListContentProvider implements ITreeContentProvider
 {
 

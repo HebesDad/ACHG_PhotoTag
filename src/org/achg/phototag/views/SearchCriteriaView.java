@@ -28,16 +28,26 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+/**
+ * View for controlling search criteria
+ */
 public class SearchCriteriaView implements IModelContentChangeListener
 {
-	Combo _catCombo;
-	Combo _tagCombo;
-	Combo _tagValueCombo;
-	Combo _subTagCombo;
-	Combo _subTagValueCombo;
-	TableViewer _selectedTableViewer;
-	UISynchronize _sync;
+	private Combo _catCombo;
+	private Combo _tagCombo;
+	private Combo _tagValueCombo;
+	private Combo _subTagCombo;
+	private Combo _subTagValueCombo;
+	private TableViewer _selectedTableViewer;
+	private UISynchronize _sync;
 
+	/**
+	 * Create the UI components
+	 * 
+	 * @param viewParent the parent composite
+	 * @param partService the Eclipse part service
+	 * @param sync the UI synchronisation object
+	 */
 	@PostConstruct
 	public void create(Composite viewParent, EPartService partService, UISynchronize sync)
 	{
@@ -154,7 +164,6 @@ public class SearchCriteriaView implements IModelContentChangeListener
 					if(obj instanceof TagValue)
 					{
 						SearchCriteriaContainer.getInstance().removeCriteria((TagValue)obj);
-
 					}
 				}
 				_selectedTableViewer.setInput(SearchCriteriaContainer.getInstance().getCriteria());
@@ -225,7 +234,6 @@ public class SearchCriteriaView implements IModelContentChangeListener
 	{
 		_sync.asyncExec(new Runnable()
 		{
-
 			@Override
 			public void run()
 			{
