@@ -10,6 +10,9 @@ import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
 import org.achg.phototag.model.ModelManager;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
+/**
+ * Tag heirarchy content provider
+ */
 public class TagsHierarchyContentProvider implements ITreeContentProvider
 {
 
@@ -17,7 +20,9 @@ public class TagsHierarchyContentProvider implements ITreeContentProvider
 	public Object[] getElements(Object inputElement)
 	{
 		if(inputElement instanceof Root)
+		{
 			return ((Root)inputElement).getTagCategoriesList().toArray();
+		}
 		return null;
 	}
 
@@ -25,9 +30,13 @@ public class TagsHierarchyContentProvider implements ITreeContentProvider
 	public Object[] getChildren(Object parentElement)
 	{
 		if(parentElement instanceof Root)
+		{
 			return ((Root)parentElement).getTagCategoriesList().toArray();
+		}
 		if(parentElement instanceof TagCategory)
+		{
 			return ((TagCategory)parentElement).getTags();
+		}
 		if(parentElement instanceof Tag)
 		{
 			List<Object> result = new ArrayList<>();
@@ -36,7 +45,6 @@ public class TagsHierarchyContentProvider implements ITreeContentProvider
 				result.add(subtag);
 			}
 
-			
 			for(TagValue value : ModelManager.getInstance().getModel().getValues())
 			{
 				if(((Tag)parentElement).eContainer() instanceof Tag)
@@ -47,18 +55,16 @@ public class TagsHierarchyContentProvider implements ITreeContentProvider
 						result.add(value);
 					}
 				}
-				else
+				else if(value.getTag() == parentElement && value.getSubTag() == null)
 				{
 					// primary tag
-					if(value.getTag() == parentElement && value.getSubTag() == null)
-					{
-						result.add(value);
-					}
+					result.add(value);
 				}
 			}
 			return result.toArray();
 		}
 		return null;
+
 	}
 
 	@Override
@@ -72,7 +78,9 @@ public class TagsHierarchyContentProvider implements ITreeContentProvider
 	public boolean hasChildren(Object element)
 	{
 		if(element instanceof TagValue)
+		{
 			return false;
+		}
 		return true;
 	}
 

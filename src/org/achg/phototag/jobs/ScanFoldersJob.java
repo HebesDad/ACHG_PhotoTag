@@ -9,7 +9,6 @@ import org.achg.phototag.generated.model.PhotoTagModel.Image;
 import org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelFactory;
 import org.achg.phototag.generated.model.PhotoTagModel.Root;
 import org.achg.phototag.model.DataChangeType;
-import org.achg.phototag.model.DataModifier;
 import org.achg.phototag.model.ModelManager;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -20,23 +19,33 @@ import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * Job for scanning folders for images
+ */
 public class ScanFoldersJob extends Job
 {
-	File _fileRoot;
-	Root _modelRoot;
-	DataModifier _modifier = new DataModifier();
-	boolean _dataModified = false;
-	String _rootPrefix;
-	UISynchronize _sync;
-	Shell _shell;
+	private File _fileRoot;
+	private Root _modelRoot;
+	private boolean _dataModified = false;
+	private String _rootPrefix;
+	private UISynchronize _sync;
+	private Shell _shell;
 	private int _extraFolderCount = 0;
 	private int _extraImageCount = 0;
 
-	public ScanFoldersJob(File fileroot, Root modelRoot, UISynchronize sync, Shell shell)
+	/**
+	 * Constructor
+	 * 
+	 * @param fileRoot the root folder
+	 * @param modelRoot the root folder object in the model
+	 * @param sync the UI synchronisation object
+	 * @param shell the main shell
+	 */
+	public ScanFoldersJob(File fileRoot, Root modelRoot, UISynchronize sync, Shell shell)
 	{
 		super("Scanning for folders");
-		_fileRoot = fileroot;
-		_rootPrefix = fileroot.getAbsoluteFile().getPath();
+		_fileRoot = fileRoot;
+		_rootPrefix = fileRoot.getAbsoluteFile().getPath();
 		_modelRoot = modelRoot;
 		_sync = sync;
 		_shell = shell;

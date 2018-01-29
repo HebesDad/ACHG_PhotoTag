@@ -2,6 +2,7 @@ package org.achg.phototag.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.achg.phototag.generated.model.PhotoTagModel.Tag;
 import org.achg.phototag.generated.model.PhotoTagModel.TagCategory;
@@ -9,85 +10,117 @@ import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * Modify model data
+ */
 public class DataModifier
 {
 
-	public void addCategory(Shell shell, TagCategory cat)
+	/**
+	 * Add a tag category
+	 * 
+	 * @param shell the main shell
+	 * @param newCategory the new tag category
+	 */
+	public void addCategory(Shell shell, TagCategory newCategory)
 	{
-		ArrayList<TagCategory> cats = new ArrayList<>();
-		for(TagCategory old : ModelManager.getInstance().getModel().getTagCategories())
-		{
+		ModelManager manager = ModelManager.getInstance();
 
-			if(old.getName().toLowerCase().equals(cat.getName().toLowerCase()))
+		List<TagCategory> categories = new ArrayList<>();
+		for(TagCategory oldCategory : manager.getModel().getTagCategories())
+		{
+			if(oldCategory.getName().equalsIgnoreCase(newCategory.getName()))
 			{
 				MessageDialog.openInformation(shell, "Duplicate", "Creating this item would create a duplicate");
 				return;
 			}
-			cats.add(old);
+			categories.add(oldCategory);
 		}
-		cats.add(cat);
-		ModelManager.getInstance().getModel().setTagCategories(cats.toArray(new TagCategory[cats.size()]));
-		ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_CATEGORY));
+		categories.add(newCategory);
+		manager.getModel().setTagCategories(categories.toArray(new TagCategory[categories.size()]));
+		manager.notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_CATEGORY));
 	}
 
-	public void addTag(Shell shell, TagCategory cat, Tag newtag)
+	/**
+	 * Add a tag
+	 * 
+	 * @param shell the main shell
+	 * @param category the tag category
+	 * @param newTag the new tag
+	 */
+	public void addTag(Shell shell, TagCategory category, Tag newTag)
 	{
-		ArrayList<Tag> tags = new ArrayList<>();
-		for(Tag old : cat.getTags())
+		List<Tag> tags = new ArrayList<>();
+		for(Tag oldTag : category.getTags())
 		{
-			if(old.getName().toLowerCase().equals(newtag.getName().toLowerCase()))
+			if(oldTag.getName().equalsIgnoreCase(newTag.getName()))
 			{
 				MessageDialog.openInformation(shell, "Duplicate", "Creating this item would create a duplicate");
 				return;
 			}
-			tags.add(old);
+			tags.add(oldTag);
 		}
-		tags.add(newtag);
+		tags.add(newTag);
 
-		cat.setTags(tags.toArray(new Tag[tags.size()]));
+		category.setTags(tags.toArray(new Tag[tags.size()]));
 
 		ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_TAG));
 	}
 
-	public void addSubTag(Shell shell, Tag parent, Tag newtag)
+	/**
+	 * Add a sub-tag
+	 * 
+	 * @param shell the main shell
+	 * @param parentTag the parent tag
+	 * @param newSubTag the new sub-tag
+	 */
+	public void addSubTag(Shell shell, Tag parentTag, Tag newSubTag)
 	{
-		ArrayList<Tag> subtags = new ArrayList<>();
-		for(Tag old : parent.getSubTag())
+		List<Tag> subtags = new ArrayList<>();
+		for(Tag oldSubTag : parentTag.getSubTag())
 		{
-			if(old.getName().toLowerCase().equals(newtag.getName().toLowerCase()))
+			if(oldSubTag.getName().equalsIgnoreCase(newSubTag.getName()))
 			{
 				MessageDialog.openInformation(shell, "Duplicate", "Creating this item would create a duplicate");
 				return;
 			}
-			subtags.add(old);
+			subtags.add(oldSubTag);
 		}
-		subtags.add(newtag);
+		subtags.add(newSubTag);
 
-		parent.setSubTag(subtags.toArray(new Tag[subtags.size()]));
+		parentTag.setSubTag(subtags.toArray(new Tag[subtags.size()]));
 
 		ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_SUBTAG));
 	}
 
-	public void addValue(Shell shell, TagValue value)
+	/**
+	 * Add a tag value
+	 * 
+	 * @param shell the main shell
+	 * @param newValue the new value
+	 */
+	public void addValue(Shell shell, TagValue newValue)
 	{
-		ArrayList<TagValue> values = new ArrayList<>();
-		for(TagValue old : ModelManager.getInstance().getModel().getValues())
+		ModelManager manager = ModelManager.getInstance();
+
+		List<TagValue> values = new ArrayList<>();
+		for(TagValue oldValue : manager.getModel().getValues())
 		{
-			if(old.getTag() == value.getTag() && old.getSubTag() == value.getSubTag())
+			if(oldValue.getTag() == newValue.getTag() && oldValue.getSubTag() == newValue.getSubTag())
 			{
-				if(old.getValue().toLowerCase().equals(value.getValue().toLowerCase()))
+				if(oldValue.getValue().equalsIgnoreCase(newValue.getValue()))
 				{
 					MessageDialog.openInformation(shell, "Duplicate", "Creating this item would create a duplicate");
 					return;
 				}
 			}
-			values.add(old);
+			values.add(oldValue);
 		}
-		values.add(value);
+		values.add(newValue);
 
-		ModelManager.getInstance().getModel().setValues(values.toArray(new TagValue[values.size()]));
+		manager.getModel().setValues(values.toArray(new TagValue[values.size()]));
 
-		ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_VALUE));
+		manager.notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_VALUE));
 	}
 
 }

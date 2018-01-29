@@ -16,17 +16,26 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * View for displaying the model status
+ */
 public class StatusView implements IModelStatusChangeListener
 {
-
 	private Label _currentStatusLabel;
 	private UISynchronize _sync;
 
+	/**
+	 * Create the UI components
+	 * 
+	 * @param viewParent the parent composite
+	 * @param shell the main shell
+	 * @param sync the UI synchronisation object
+	 */
 	@Inject
-	public void create(Composite parent, Shell shell, UISynchronize sync)
+	public void create(Composite viewParent, Shell shell, UISynchronize sync)
 	{
 		_sync = sync;
-		Composite compo = new Composite(parent, SWT.BORDER | SWT.FILL);
+		Composite compo = new Composite(viewParent, SWT.BORDER | SWT.FILL);
 		GridLayout layout = new GridLayout(2, false);
 		compo.setLayout(layout);
 
@@ -51,7 +60,9 @@ public class StatusView implements IModelStatusChangeListener
 			_currentStatusLabel.setText(message);
 		}
 		else
+		{
 			_currentStatusLabel.setText("Not attached to images");
+		}
 		_currentStatusLabel.requestLayout();
 	}
 
@@ -60,11 +71,9 @@ public class StatusView implements IModelStatusChangeListener
 	{
 		_sync.asyncExec(new Runnable()
 		{
-
 			@Override
 			public void run()
 			{
-
 				_currentStatusLabel.setText(message);
 				_currentStatusLabel.requestLayout();
 			}
@@ -80,7 +89,6 @@ public class StatusView implements IModelStatusChangeListener
 		public MessageResetJob()
 		{
 			super("Message reset job");
-
 		}
 
 		@Override
@@ -90,6 +98,7 @@ public class StatusView implements IModelStatusChangeListener
 			return Status.OK_STATUS;
 		}
 
+		@Override
 		public boolean belongsTo(Object obj)
 		{
 			return obj == MessageResetJob.class;

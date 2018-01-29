@@ -36,22 +36,43 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.Preferences;
 
-public class ImageListView implements IModelContentChangeListener, ISearchResultListener, IModelStatusChangeListener {
+/**
+ * View for listing images
+ */
+public class ImageListView implements IModelContentChangeListener, ISearchResultListener, IModelStatusChangeListener
+{
+	/** Part ID */
 	public static String ID = "org.achg.phototag.part.imagelist";
-	TreeViewer _treeViewer;
-	UISynchronize _sync;
-	ESelectionService _selectionService;
-	EPartService _partService ;
 
+	private TreeViewer _treeViewer;
+	private UISynchronize _sync;
+	private ESelectionService _selectionService;
+	private EPartService _partService;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param sync the UI synchronisation object
+	 */
 	@Inject
-	public ImageListView(UISynchronize sync) {
+	public ImageListView(UISynchronize sync)
+	{
 		_sync = sync;
 	}
 
+	/**
+	 * Create the UI components
+	 * 
+	 * @param viewParent the parent composite
+	 * @param selectionService the Eclipse selection service
+	 * @param shell the main shell
+	 * @param partService the Eclipse part service
+	 */
 	@PostConstruct
-	public void create(Composite viewParent, ESelectionService selectionService, Shell shell, EPartService partService) {
-		_selectionService=selectionService;
-		_partService=partService;
+	public void create(Composite viewParent, ESelectionService selectionService, Shell shell, EPartService partService)
+	{
+		_selectionService = selectionService;
+		_partService = partService;
 		GridLayout layout = new GridLayout(1, false);
 		viewParent.setLayout(layout);
 
@@ -61,12 +82,12 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 		_treeViewer.setLabelProvider(new ModelLabelProvider());
 		_treeViewer.setAutoExpandLevel(10);
 		_treeViewer.setComparator(new ImageListViewerComparator());
-		_treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
+		_treeViewer.addSelectionChangedListener(new ISelectionChangedListener()
+		{
 			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
+			public void selectionChanged(SelectionChangedEvent event)
+			{
 				selectionService.setSelection(_treeViewer.getStructuredSelection().getFirstElement());
-
 			}
 		});
 		_treeViewer.expandToLevel(3);
@@ -78,112 +99,126 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 		SearchCriteriaContainer.getInstance().addSearchResultListener(this);
 
 		shell.setMaximized(true);
-		
+
 		selectLastImage();
-		
+
 		ModelManager.getInstance().addModelStatusChangeListener(this);
 	}
 
 	@Override
-	public void modelContentChanged(List<DataChangeType> types) {
-		_sync.asyncExec(new Runnable() {
+	public void modelContentChanged(List<DataChangeType> types)
+	{
+		_sync.asyncExec(new Runnable()
+		{
 			@Override
-			public void run() {
-				
-				if (types.contains(DataChangeType.ADD_FOLDER)|| types.contains(DataChangeType.ADD_IMAGE))
-				_treeViewer.refresh();
+			public void run()
+			{
+				if(types.contains(DataChangeType.ADD_FOLDER) || types.contains(DataChangeType.ADD_IMAGE))
+				{
+					_treeViewer.refresh();
+				}
+
 				_treeViewer.expandToLevel(3);
-				
-				
 			}
 		});
 
 	}
-	
+
 	private void selectLastImage()
 	{
 		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode("org.achg.phototag");
 
-		Preferences sub1 = preferences.node("root");
-		String lastImageName = sub1.get("selectedImage", null );
-		if (lastImageName!= null)
+		Preferences rootPreferences = preferences.node("root");
+		String lastImageName = rootPreferences.get("selectedImage", null);
+		if(lastImageName != null)
 		{
 			ImageFinderFolderVisitor finder = new ImageFinderFolderVisitor(lastImageName);
 			ModelManager.getInstance().visitFolders(finder);
-			if (finder.getFoundImage()!= null)
+			if(finder.getFoundImage() != null)
 			{
-				expandToShow((Folder) finder.getFoundImage().eContainer());
+				expandToShow((Folder)finder.getFoundImage().eContainer());
 				_treeViewer.expandToLevel(finder.getFoundImage(), 0);
 				_treeViewer.setSelection(new StructuredSelection(finder.getFoundImage()));
 			}
 		}
 	}
 
-	private void expandToShow(Folder eContainer) {
-		if (eContainer.eContainer() instanceof Folder)
+	private void expandToShow(Folder eContainer)
+	{
+		if(eContainer.eContainer() instanceof Folder)
 		{
-			expandToShow((Folder) eContainer.eContainer());
+			expandToShow((Folder)eContainer.eContainer());
 		}
-		
+
 		_treeViewer.expandToLevel(eContainer, AbstractTreeViewer.ALL_LEVELS);
 	}
 
 	@Override
-	public void notifyNewResult() {
-		_sync.asyncExec(new Runnable() {
+	public void notifyNewResult()
+	{
+		_sync.asyncExec(new Runnable()
+		{
 			@Override
-			public void run() {
+			public void run()
+			{
 				_treeViewer.refresh();
 				_treeViewer.expandToLevel(3);
 			}
 		});
-
 	}
-	
+
 	private void pushSelection(Image selection)
 	{
 		_treeViewer.setSelection(new StructuredSelection(selection));
 		_selectionService.setSelection(selection);
-		
-		MPart mpart = _partService.findPart(ImageDisplayView.ID);
-		if (mpart != null)
+
+		MPart imageDisplayPart = _partService.findPart(ImageDisplayView.ID);
+		if(imageDisplayPart != null)
 		{
-			Object obj = mpart.getObject();
-			if (obj instanceof ImageDisplayView)
+			Object obj = imageDisplayPart.getObject();
+			if(obj instanceof ImageDisplayView)
 			{
 				((ImageDisplayView)obj).receiveSelection(selection);
 			}
-					
+
 		}
-		
-		mpart = _partService.findPart(ImagesTagControlView.ID);
-		if (mpart!=null)
+
+		MPart tagControlPart = _partService.findPart(ImagesTagControlView.ID);
+		if(tagControlPart != null)
 		{
-			Object obj = mpart.getObject();
-			if (obj instanceof ImagesTagControlView)
+			Object obj = tagControlPart.getObject();
+			if(obj instanceof ImagesTagControlView)
 			{
 				((ImagesTagControlView)obj).receiveSelection(selection);
 			}
 		}
 	}
 
-	public void previousImage() {
-		if (SearchCriteriaContainer.getInstance().getResults() != null) {
-
-			Image selected = (Image) _treeViewer.getStructuredSelection().getFirstElement();
+	/**
+	 * Select the previous image
+	 */
+	public void previousImage()
+	{
+		if(SearchCriteriaContainer.getInstance().getResults() != null)
+		{
+			Image selected = (Image)_treeViewer.getStructuredSelection().getFirstElement();
 			List<Image> result = SearchCriteriaContainer.getInstance().getResults();
 			int index = result.indexOf(selected);
-			if (index > 0) {
+			if(index > 0)
+			{
 				index--;
 				selected = result.get(index);
 				pushSelection(selected);
 			}
-		} else {
-			Image selected = (Image) _treeViewer.getStructuredSelection().getFirstElement();
-			Folder folder = (Folder) selected.eContainer();
+		}
+		else
+		{
+			Image selected = (Image)_treeViewer.getStructuredSelection().getFirstElement();
+			Folder folder = (Folder)selected.eContainer();
 			int index = folder.getImagesList().indexOf(selected);
 			index--;
-			if (index >= 0) {
+			if(index >= 0)
+			{
 				selected = folder.getImagesList().get(index);
 				pushSelection(selected);
 			}
@@ -191,23 +226,31 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 
 	}
 
-	public void nextImage() {
-		if (SearchCriteriaContainer.getInstance().getResults() != null) {
-
-			Image selected = (Image) _treeViewer.getStructuredSelection().getFirstElement();
+	/**
+	 * Select the next image
+	 */
+	public void nextImage()
+	{
+		if(SearchCriteriaContainer.getInstance().getResults() != null)
+		{
+			Image selected = (Image)_treeViewer.getStructuredSelection().getFirstElement();
 			List<Image> result = SearchCriteriaContainer.getInstance().getResults();
 			int index = result.indexOf(selected);
 			index++;
-			if (index < result.size()) {
+			if(index < result.size())
+			{
 				selected = result.get(index);
 				pushSelection(selected);
 			}
-		} else {
-			Image selected = (Image) _treeViewer.getStructuredSelection().getFirstElement();
-			Folder folder = (Folder) selected.eContainer();
+		}
+		else
+		{
+			Image selected = (Image)_treeViewer.getStructuredSelection().getFirstElement();
+			Folder folder = (Folder)selected.eContainer();
 			int index = folder.getImagesList().indexOf(selected);
 			index++;
-			if (index < folder.getImagesLength()) {
+			if(index < folder.getImagesLength())
+			{
 				selected = folder.getImagesList().get(index);
 				pushSelection(selected);
 			}
@@ -215,19 +258,21 @@ public class ImageListView implements IModelContentChangeListener, ISearchResult
 	}
 
 	@Override
-	public void modelStatusChanged() {
-		
-		_sync.asyncExec(new Runnable() {
+	public void modelStatusChanged()
+	{
+		_sync.asyncExec(new Runnable()
+		{
 			@Override
-			public void run() {
-				selectLastImage();;
+			public void run()
+			{
+				selectLastImage();
 			}
 		});
 	}
 
 	@Override
-	public void statusMessage(String message) {
-		// TODO Auto-generated method stub
-		
+	public void statusMessage(String message)
+	{
+		// Ignore status messages
 	}
 }

@@ -8,6 +8,9 @@ import org.achg.phototag.ui.TaggerImages;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+/**
+ * Model label provider
+ */
 public class ModelLabelProvider extends LabelProvider
 {
 
@@ -42,12 +45,16 @@ public class ModelLabelProvider extends LabelProvider
 	public String getText(Object element)
 	{
 		if(element instanceof TagCategory)
+		{
 			return ((TagCategory)element).getName();
+		}
 		if(element instanceof Tag)
+		{
 			return ((Tag)element).getName();
+		}
 		if(element instanceof TagValue)
 		{
-			if (((TagValue)element).getSubTag()!=null)
+			if(((TagValue)element).getSubTag() != null)
 			{
 				return ((TagValue)element).getValue() + ", " + ((TagValue)element).getSubValue();
 			}
@@ -66,7 +73,9 @@ public class ModelLabelProvider extends LabelProvider
 		{
 			String name = ((Folder)element).getName();
 			if(name == null)
+			{
 				name = "<top>";
+			}
 			if(name.contains("\\"))
 			{
 				return name.substring(name.lastIndexOf('\\') + 1);

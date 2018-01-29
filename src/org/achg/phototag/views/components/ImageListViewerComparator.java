@@ -5,8 +5,12 @@ import org.achg.phototag.generated.model.PhotoTagModel.Image;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 
+/**
+ * Comparator for objects in the image list viewer
+ */
 public class ImageListViewerComparator extends ViewerComparator
 {
+	@Override
 	public int compare(Viewer viewer, Object o1, Object o2)
 	{
 		if(o1 instanceof Folder && o2 instanceof Image)

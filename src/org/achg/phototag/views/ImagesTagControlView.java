@@ -35,18 +35,30 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
+/**
+ * View for controlling image tags
+ */
 public class ImagesTagControlView implements IModelContentChangeListener
 {
+	/** Part ID */
 	public static final String ID = "org.achg.phototag.part.imageTagControlView";
-	TableViewer _tableViewer;
-	Combo _catCombo;
-	Combo _tagCombo;
-	Combo _subCombo;
-	Combo _valueCombo;
-	Combo _subValueCombo;
-	Image _selectedImage = null;
-	UISynchronize _sync;
 
+	private TableViewer _tableViewer;
+	private Combo _catCombo;
+	private Combo _tagCombo;
+	private Combo _subCombo;
+	private Combo _valueCombo;
+	private Combo _subValueCombo;
+	private Image _selectedImage = null;
+	private UISynchronize _sync;
+
+	/**
+	 * Create the UI components
+	 * 
+	 * @param viewParent the parent composite
+	 * @param partService the Eclipse part service
+	 * @param sync the UI synchronisation object
+	 */
 	@PostConstruct
 	public void create(Composite viewParent, EPartService partService, UISynchronize sync)
 	{
@@ -140,7 +152,6 @@ public class ImagesTagControlView implements IModelContentChangeListener
 			{
 				processTableSelection();
 			}
-
 		});
 
 		Button deleteTagValue = new Button(viewParent, SWT.NONE);
@@ -195,22 +206,21 @@ public class ImagesTagControlView implements IModelContentChangeListener
 
 		populateSubCombo();
 
-		//even if we have no sub tag, the combo may have been set previously with sub tag values, so we need to refresh
+		// even if we have no sub tag, the combo may have been set previously with sub tag values, so we need to refresh
 
-			_subCombo.select(selectedValue.getTag().getSubTagList().indexOf(selectedValue.getSubTag()));
-			populateSubValueCombo();
+		_subCombo.select(selectedValue.getTag().getSubTagList().indexOf(selectedValue.getSubTag()));
+		populateSubValueCombo();
 
-			i = 0;
-			for(String contender : _subValueCombo.getItems())
+		i = 0;
+		for(String contender : _subValueCombo.getItems())
+		{
+			if(contender.equals(selectedValue.getSubValue()))
 			{
-				if(contender.equals(selectedValue.getSubValue()))
-				{
-					_subValueCombo.select(i);
-					break;
-				}
-				i++;
+				_subValueCombo.select(i);
+				break;
 			}
-
+			i++;
+		}
 	}
 
 	private void addTag()
@@ -228,7 +238,9 @@ public class ImagesTagControlView implements IModelContentChangeListener
 			modTypes.add(DataChangeType.ADD_CATEGORY);
 		}
 		else
+		{
 			cat = ModelManager.getInstance().getModel().getTagCategories()[_catCombo.getSelectionIndex()];
+		}
 
 		int tagSel = _tagCombo.getSelectionIndex();
 		Tag mainTag;
@@ -241,7 +253,9 @@ public class ImagesTagControlView implements IModelContentChangeListener
 			modTypes.add(DataChangeType.ADD_TAG);
 		}
 		else
+		{
 			mainTag = cat.getTags(tagSel);
+		}
 
 		int subSel = _subCombo.getSelectionIndex();
 		Tag subTag = null;
@@ -256,7 +270,9 @@ public class ImagesTagControlView implements IModelContentChangeListener
 				modTypes.add(DataChangeType.ADD_SUBTAG);
 			}
 			else
+			{
 				subTag = mainTag.getSubTag(subSel);
+			}
 		}
 		String mainValue = _valueCombo.getText();
 		String subValue = _subValueCombo.getText().trim();
@@ -277,6 +293,7 @@ public class ImagesTagControlView implements IModelContentChangeListener
 			ModelManager.getInstance().getModel().getValuesList().add(value);
 			modTypes.add(DataChangeType.ADD_VALUE);
 		}
+
 		_selectedImage.getTagValuesList().add(value);
 		modTypes.add(DataChangeType.VALUE_USAGE);
 
@@ -296,15 +313,15 @@ public class ImagesTagControlView implements IModelContentChangeListener
 
 	private TagValue findValue(Tag mainTag, Tag subTag, String mainValue, String subValue)
 	{
-
 		for(TagValue value : ModelManager.getInstance().getModel().getValuesList())
 		{
 			if(value.getTag() == mainTag && value.getSubTag() == subTag && value.getValue().equals(mainValue))
-
 			{
 				if((subTag == null && value.getSubTag() == null)
 						|| (value.getSubTag() == subTag && value.getSubValue() != null && value.getSubValue().equals(subValue)))
+				{
 					return value;
+				}
 			}
 		}
 		return null;
@@ -316,7 +333,9 @@ public class ImagesTagControlView implements IModelContentChangeListener
 
 		_catCombo.setItems(ModelManager.getCategories());
 		if(catSelected >= 0)
+		{
 			_catCombo.select(catSelected);
+		}
 
 	}
 
@@ -327,7 +346,9 @@ public class ImagesTagControlView implements IModelContentChangeListener
 
 		_tagCombo.setItems(ModelManager.getTags(catSelected));
 		if(tagSelected < 0)
+		{
 			tagSelected = 0;
+		}
 		_tagCombo.select(tagSelected);
 
 	}
@@ -340,9 +361,13 @@ public class ImagesTagControlView implements IModelContentChangeListener
 
 		String[] vals = ModelManager.getTagValues(catSelected, tagSelected);
 		if(vals.length > 0)
+		{
 			_valueCombo.setItems(vals);
+		}
 		else
+		{
 			_valueCombo.removeAll();
+		}
 		_valueCombo.select(0);
 
 	}
@@ -357,7 +382,9 @@ public class ImagesTagControlView implements IModelContentChangeListener
 
 		_subCombo.setItems(ModelManager.getSubsTags(catSelected, tagSelected));
 		if(subSelected < 0)
+		{
 			subSelected = 0;
+		}
 		_subCombo.select(subSelected);
 
 	}
@@ -372,13 +399,22 @@ public class ImagesTagControlView implements IModelContentChangeListener
 
 		String[] subs = ModelManager.getSubValues(catSelected, tagSelected, subSelected, _valueCombo.getText().trim(), " ");
 		if(subs.length > 0)
+		{
 			_subValueCombo.setItems(subs);
+		}
 		else
+		{
 			_subValueCombo.removeAll();
+		}
 		_subValueCombo.select(0);
 
 	}
 
+	/**
+	 * Handle a UI selection
+	 * 
+	 * @param selection the selection
+	 */
 	@Inject
 	public void receiveSelection(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) Object selection)
 	{
@@ -397,7 +433,6 @@ public class ImagesTagControlView implements IModelContentChangeListener
 			return;
 		_sync.asyncExec(new Runnable()
 		{
-
 			@Override
 			public void run()
 			{
@@ -416,6 +451,5 @@ public class ImagesTagControlView implements IModelContentChangeListener
 				_tableViewer.refresh();
 			}
 		});
-
 	}
 }

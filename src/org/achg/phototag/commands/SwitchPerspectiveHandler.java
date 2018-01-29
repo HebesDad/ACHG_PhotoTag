@@ -5,8 +5,18 @@ import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 
+/**
+ * Handler for switching perspectives
+ */
 public class SwitchPerspectiveHandler
 {
+	/**
+	 * Handle switching perspective
+	 * 
+	 * @param partService the Eclipse part service
+	 * @param modelService the Eclipse model service
+	 * @param window the main window
+	 */
 	@Execute
 	public void handle(EPartService partService, EModelService modelService, MWindow window)
 	{

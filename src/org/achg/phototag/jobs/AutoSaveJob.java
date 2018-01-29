@@ -6,15 +6,20 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
+/**
+ * Job for performing auto-saves
+ */
 public class AutoSaveJob extends Job
 {
-
+	/**
+	 * Constructor
+	 */
 	public AutoSaveJob()
 	{
 		super("Auto-save Job");
-
 	}
 
+	@Override
 	public boolean belongsTo(Object obj)
 	{
 		if(obj == AutoSaveJob.class)
