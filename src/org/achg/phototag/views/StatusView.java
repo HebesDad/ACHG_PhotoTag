@@ -64,7 +64,16 @@ public class StatusView implements IModelStatusChangeListener
 		{
 			String message = String.format("Attached to: %s - %d images", ModelManager.getInstance().getImagesRoot().getAbsolutePath(),
 					ModelManager.getInstance().getModel().getImageCount());
-			_currentStatusLabel.setText(message);
+			_sync.asyncExec(new Runnable()
+			{
+
+				@Override
+				public void run()
+				{
+					_currentStatusLabel.setText(message);
+				}
+			});
+
 		}
 		else
 		{

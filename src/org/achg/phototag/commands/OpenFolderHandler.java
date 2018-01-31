@@ -1,5 +1,7 @@
 package org.achg.phototag.commands;
 
+import java.io.IOException;
+
 import org.achg.phototag.model.ModelManager;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -22,7 +24,15 @@ public class OpenFolderHandler
 		String selectedFolder = directoryDialog.open();
 		if(selectedFolder != null)
 		{
-			ModelManager.getInstance().setRootFolder(selectedFolder);
+			try
+			{
+				ModelManager.getInstance().setRootFolder(selectedFolder);
+			}
+			catch(IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

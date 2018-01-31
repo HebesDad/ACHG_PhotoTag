@@ -1,6 +1,10 @@
 package org.achg.phototag.model;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -18,6 +22,8 @@ import org.achg.phototag.generated.model.PhotoTagModel.TagCategory;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
 import org.achg.phototag.jobs.AutoSaveJob;
 import org.achg.phototag.jobs.ImageCounterJob;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -27,6 +33,8 @@ import org.eclipse.emf.ecore.resource.Resource.Factory.Registry;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
@@ -54,7 +62,15 @@ public class ModelManager
 		String folder = rootPreferences.get("selectedFolder", null);
 		if(folder != null)
 		{
-			setRootFolder(folder);
+			try
+			{
+				setRootFolder(folder);
+			}
+			catch(IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -97,22 +113,32 @@ public class ModelManager
 	 * Set the root folder which contains all the images
 	 * 
 	 * @param selectedFolder the root folder
+	 * @throws IOException
 	 */
-	public void setRootFolder(String selectedFolder)
+	public void setRootFolder(String selectedFolder) throws IOException
 	{
 		_imagesRootFolder = new File(selectedFolder);
 		_pathToXmi = selectedFolder + '\\' + TAGFILE;
 		File xmiFile = new File(_pathToXmi);
 		if(!xmiFile.exists())
 		{
-			_modelRoot = PhotoTagModelFactory.eINSTANCE.createRoot();
-			addDefaultsToModel(_modelRoot);
-		}
-		else
-		{
-			_modelRoot = loadModel();
+			Bundle bundle = FrameworkUtil.getBundle(this.getClass());
+			InputStream inputStream = FileLocator.openStream(bundle, new Path("phototags.xmi"), false);
+
+			byte[] buffer = new byte[inputStream.available()];
+			inputStream.read(buffer);
+
+			xmiFile.createNewFile();
+
+			OutputStream outStream = new FileOutputStream(xmiFile);
+			outStream.write(buffer);
+			outStream.close();
+			inputStream.close();
 
 		}
+
+		_modelRoot = loadModel();
+
 		_modelLoaded = true;
 
 		notifyModelStatusChangeListeners();
