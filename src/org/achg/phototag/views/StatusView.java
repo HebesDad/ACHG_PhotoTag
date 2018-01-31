@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -48,6 +49,12 @@ public class StatusView implements IModelStatusChangeListener
 		modelStatusChanged();
 
 		ModelManager.getInstance().addModelStatusChangeListener(this);
+
+		if(!ModelManager.getInstance().isLoaded())
+		{
+			MessageDialog.openInformation(shell, "Welcome",
+					"It looks like you haven't used this tool before.\nClick the \"Open Folder\" menu item to connect to a folder.");
+		}
 	}
 
 	@Override
