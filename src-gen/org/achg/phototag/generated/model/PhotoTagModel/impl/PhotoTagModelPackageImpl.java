@@ -110,7 +110,7 @@ public class PhotoTagModelPackageImpl extends EPackageImpl implements PhotoTagMo
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 *
+	 * 
 	 * <p>This method is used to initialize {@link PhotoTagModelPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -123,8 +123,7 @@ public class PhotoTagModelPackageImpl extends EPackageImpl implements PhotoTagMo
 		if (isInited) return (PhotoTagModelPackage)EPackage.Registry.INSTANCE.getEPackage(PhotoTagModelPackage.eNS_URI);
 
 		// Obtain or create and register package
-		Object registeredPhotoTagModelPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
-		PhotoTagModelPackageImpl thePhotoTagModelPackage = registeredPhotoTagModelPackage instanceof PhotoTagModelPackageImpl ? (PhotoTagModelPackageImpl)registeredPhotoTagModelPackage : new PhotoTagModelPackageImpl();
+		PhotoTagModelPackageImpl thePhotoTagModelPackage = (PhotoTagModelPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof PhotoTagModelPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new PhotoTagModelPackageImpl());
 
 		isInited = true;
 
@@ -137,6 +136,7 @@ public class PhotoTagModelPackageImpl extends EPackageImpl implements PhotoTagMo
 		// Mark meta-data to indicate it can't be changed
 		thePhotoTagModelPackage.freeze();
 
+  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(PhotoTagModelPackage.eNS_URI, thePhotoTagModelPackage);
 		return thePhotoTagModelPackage;
@@ -404,6 +404,26 @@ public class PhotoTagModelPackageImpl extends EPackageImpl implements PhotoTagMo
 	public EAttribute getTagValue_SubValue()
 	{
         return (EAttribute)getTagValue().getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTagValue_XPercentage()
+	{
+        return (EAttribute)getTagValue().getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTagValue_YPercentage()
+	{
+        return (EAttribute)getTagValue().getEStructuralFeatures().get(5);
 	}
 
 	/**

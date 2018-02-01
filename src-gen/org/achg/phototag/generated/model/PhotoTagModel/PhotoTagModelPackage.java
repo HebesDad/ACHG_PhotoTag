@@ -370,13 +370,31 @@ public interface PhotoTagModelPackage extends EPackage
 	int TAG_VALUE__SUB_VALUE = 3;
 
 	/**
+	 * The feature id for the '<em><b>XPercentage</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TAG_VALUE__XPERCENTAGE = 4;
+
+	/**
+	 * The feature id for the '<em><b>YPercentage</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TAG_VALUE__YPERCENTAGE = 5;
+
+	/**
 	 * The number of structural features of the '<em>Tag Value</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TAG_VALUE_FEATURE_COUNT = 4;
+	int TAG_VALUE_FEATURE_COUNT = 6;
 
 	/**
 	 * The number of operations of the '<em>Tag Value</em>' class.
@@ -647,6 +665,28 @@ public interface PhotoTagModelPackage extends EPackage
 	EAttribute getTagValue_SubValue();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.achg.phototag.generated.model.PhotoTagModel.TagValue#getXPercentage <em>XPercentage</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>XPercentage</em>'.
+	 * @see org.achg.phototag.generated.model.PhotoTagModel.TagValue#getXPercentage()
+	 * @see #getTagValue()
+	 * @generated
+	 */
+	EAttribute getTagValue_XPercentage();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.achg.phototag.generated.model.PhotoTagModel.TagValue#getYPercentage <em>YPercentage</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>YPercentage</em>'.
+	 * @see org.achg.phototag.generated.model.PhotoTagModel.TagValue#getYPercentage()
+	 * @see #getTagValue()
+	 * @generated
+	 */
+	EAttribute getTagValue_YPercentage();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -873,6 +913,22 @@ public interface PhotoTagModelPackage extends EPackage
 		 * @generated
 		 */
 		EAttribute TAG_VALUE__SUB_VALUE = eINSTANCE.getTagValue_SubValue();
+
+		/**
+		 * The meta object literal for the '<em><b>XPercentage</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TAG_VALUE__XPERCENTAGE = eINSTANCE.getTagValue_XPercentage();
+
+		/**
+		 * The meta object literal for the '<em><b>YPercentage</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TAG_VALUE__YPERCENTAGE = eINSTANCE.getTagValue_YPercentage();
 
 	}
 

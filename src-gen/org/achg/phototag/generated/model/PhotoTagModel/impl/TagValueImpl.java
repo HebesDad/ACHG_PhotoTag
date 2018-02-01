@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.impl.TagValueImpl#getValue <em>Value</em>}</li>
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.impl.TagValueImpl#getSubTag <em>Sub Tag</em>}</li>
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.impl.TagValueImpl#getSubValue <em>Sub Value</em>}</li>
+ *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.impl.TagValueImpl#getXPercentage <em>XPercentage</em>}</li>
+ *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.impl.TagValueImpl#getYPercentage <em>YPercentage</em>}</li>
  * </ul>
  *
  * @generated
@@ -91,6 +93,46 @@ public class TagValueImpl extends MinimalEObjectImpl.Container implements TagVal
 	 * @ordered
 	 */
 	protected String subValue = SUB_VALUE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getXPercentage() <em>XPercentage</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getXPercentage()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final double XPERCENTAGE_EDEFAULT = 0.0;
+
+	/**
+	 * The cached value of the '{@link #getXPercentage() <em>XPercentage</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getXPercentage()
+	 * @generated
+	 * @ordered
+	 */
+	protected double xPercentage = XPERCENTAGE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getYPercentage() <em>YPercentage</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getYPercentage()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final double YPERCENTAGE_EDEFAULT = 0.0;
+
+	/**
+	 * The cached value of the '{@link #getYPercentage() <em>YPercentage</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getYPercentage()
+	 * @generated
+	 * @ordered
+	 */
+	protected double yPercentage = YPERCENTAGE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -250,6 +292,52 @@ public class TagValueImpl extends MinimalEObjectImpl.Container implements TagVal
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public double getXPercentage()
+	{
+		return xPercentage;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setXPercentage(double newXPercentage)
+	{
+		double oldXPercentage = xPercentage;
+		xPercentage = newXPercentage;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, PhotoTagModelPackage.TAG_VALUE__XPERCENTAGE, oldXPercentage, xPercentage));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public double getYPercentage()
+	{
+		return yPercentage;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setYPercentage(double newYPercentage)
+	{
+		double oldYPercentage = yPercentage;
+		yPercentage = newYPercentage;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, PhotoTagModelPackage.TAG_VALUE__YPERCENTAGE, oldYPercentage, yPercentage));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType)
 	{
@@ -265,6 +353,10 @@ public class TagValueImpl extends MinimalEObjectImpl.Container implements TagVal
 				return basicGetSubTag();
 			case PhotoTagModelPackage.TAG_VALUE__SUB_VALUE:
 				return getSubValue();
+			case PhotoTagModelPackage.TAG_VALUE__XPERCENTAGE:
+				return getXPercentage();
+			case PhotoTagModelPackage.TAG_VALUE__YPERCENTAGE:
+				return getYPercentage();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -290,6 +382,12 @@ public class TagValueImpl extends MinimalEObjectImpl.Container implements TagVal
 				return;
 			case PhotoTagModelPackage.TAG_VALUE__SUB_VALUE:
 				setSubValue((String)newValue);
+				return;
+			case PhotoTagModelPackage.TAG_VALUE__XPERCENTAGE:
+				setXPercentage((Double)newValue);
+				return;
+			case PhotoTagModelPackage.TAG_VALUE__YPERCENTAGE:
+				setYPercentage((Double)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -317,6 +415,12 @@ public class TagValueImpl extends MinimalEObjectImpl.Container implements TagVal
 			case PhotoTagModelPackage.TAG_VALUE__SUB_VALUE:
 				setSubValue(SUB_VALUE_EDEFAULT);
 				return;
+			case PhotoTagModelPackage.TAG_VALUE__XPERCENTAGE:
+				setXPercentage(XPERCENTAGE_EDEFAULT);
+				return;
+			case PhotoTagModelPackage.TAG_VALUE__YPERCENTAGE:
+				setYPercentage(YPERCENTAGE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -339,6 +443,10 @@ public class TagValueImpl extends MinimalEObjectImpl.Container implements TagVal
 				return subTag != null;
 			case PhotoTagModelPackage.TAG_VALUE__SUB_VALUE:
 				return SUB_VALUE_EDEFAULT == null ? subValue != null : !SUB_VALUE_EDEFAULT.equals(subValue);
+			case PhotoTagModelPackage.TAG_VALUE__XPERCENTAGE:
+				return xPercentage != XPERCENTAGE_EDEFAULT;
+			case PhotoTagModelPackage.TAG_VALUE__YPERCENTAGE:
+				return yPercentage != YPERCENTAGE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -353,11 +461,15 @@ public class TagValueImpl extends MinimalEObjectImpl.Container implements TagVal
 	{
 		if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
+		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (Value: ");
 		result.append(value);
 		result.append(", SubValue: ");
 		result.append(subValue);
+		result.append(", xPercentage: ");
+		result.append(xPercentage);
+		result.append(", yPercentage: ");
+		result.append(yPercentage);
 		result.append(')');
 		return result.toString();
 	}

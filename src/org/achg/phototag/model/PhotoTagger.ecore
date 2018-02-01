@@ -124,5 +124,14 @@
         xsi:type="ecore:EAttribute"
         name="SubValue"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures
+        xsi:type="ecore:EAttribute"
+        name="xPercentage"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
+        defaultValueLiteral="0"/>
+    <eStructuralFeatures
+        xsi:type="ecore:EAttribute"
+        name="yPercentage"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
   </eClassifiers>
 </ecore:EPackage>

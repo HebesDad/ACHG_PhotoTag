@@ -276,7 +276,7 @@ public class ImageImpl extends MinimalEObjectImpl.Container implements Image
 	{
 		if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
+		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (Name: ");
 		result.append(name);
 		result.append(')');

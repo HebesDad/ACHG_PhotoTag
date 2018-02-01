@@ -553,7 +553,7 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root
 	{
 		if (eIsProxy()) return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
+		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (XmlHome: ");
 		result.append(xmlHome);
 		result.append(", ImageCount: ");
