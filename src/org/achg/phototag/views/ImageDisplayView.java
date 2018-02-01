@@ -18,11 +18,14 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
@@ -39,8 +42,9 @@ public class ImageDisplayView
 	public static final String ID = "org.achg.phototag.part.imageDisplayPart";
 
 	private Label _imageNameLabel;
-	private Label _imageLabel;
+	private Canvas _imageLabel;
 	private Button _saveCopyButton;
+	private org.eclipse.swt.graphics.Image _scaledImage;
 
 	/**
 	 * Create the UI components
@@ -90,9 +94,20 @@ public class ImageDisplayView
 		layout = new GridLayout(1, false);
 		imageComposite.setLayout(layout);
 
-		_imageLabel = new Label(imageComposite, SWT.FILL);
+		_imageLabel = new Canvas(imageComposite, SWT.FILL);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		_imageLabel.setLayoutData(gd);
+		_imageLabel.addPaintListener(new PaintListener()
+		{
+
+			@Override
+			public void paintControl(PaintEvent e)
+			{
+				if(_scaledImage != null)
+					e.gc.drawImage(_scaledImage, 0, 0);
+
+			}
+		});
 
 	}
 
@@ -134,11 +149,10 @@ public class ImageDisplayView
 	{
 		try
 		{
-			org.eclipse.swt.graphics.Image oldImage = _imageLabel.getImage();
-			if(oldImage != null)
+
+			if(_scaledImage != null)
 			{
-				_imageLabel.setImage(null);
-				oldImage.dispose();
+				_scaledImage.dispose();
 			}
 
 			ImageDescriptor desc = ImageDescriptor.createFromURL(new URL("file", null, imageFileName));
@@ -149,12 +163,10 @@ public class ImageDisplayView
 
 			float scaleFactor = scaleFactorH < scaleFactorV ? scaleFactorH : scaleFactorV;
 
-			org.eclipse.swt.graphics.Image scaled = new org.eclipse.swt.graphics.Image(_imageLabel.getDisplay(),
+			_scaledImage = new org.eclipse.swt.graphics.Image(_imageLabel.getDisplay(),
 					swtImage.getImageData().scaledTo((int)(swtImage.getBounds().width * scaleFactor), (int)(swtImage.getBounds().height * scaleFactor)));
 
-			_imageLabel.setImage(scaled);
-
-			_imageLabel.requestLayout();
+			_imageLabel.redraw();
 			swtImage.dispose();
 			_imageNameLabel.getParent().requestLayout();
 			desc.destroyResource(swtImage);
