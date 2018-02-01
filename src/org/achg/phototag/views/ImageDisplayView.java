@@ -12,6 +12,7 @@ import org.achg.phototag.generated.model.PhotoTagModel.Image;
 import org.achg.phototag.model.ModelManager;
 import org.achg.phototag.ui.TaggerImages;
 import org.achg.phototag.views.components.CoordinatesCoordinator;
+import org.achg.phototag.views.components.ICoordinatesListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -23,6 +24,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -39,7 +41,7 @@ import org.osgi.service.prefs.Preferences;
 /**
  * View for displaying images
  */
-public class ImageDisplayView
+public class ImageDisplayView implements ICoordinatesListener, PaintListener
 {
 	/** Part ID */
 	public static final String ID = "org.achg.phototag.part.imageDisplayPart";
@@ -48,6 +50,7 @@ public class ImageDisplayView
 	private Canvas _imageCanvas;
 	private Button _saveCopyButton;
 	private org.eclipse.swt.graphics.Image _scaledImage;
+	private org.eclipse.swt.graphics.Image _copyImage;
 
 	/**
 	 * Create the UI components
@@ -100,17 +103,7 @@ public class ImageDisplayView
 		_imageCanvas = new Canvas(imageComposite, SWT.FILL);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		_imageCanvas.setLayoutData(gd);
-		_imageCanvas.addPaintListener(new PaintListener()
-		{
-
-			@Override
-			public void paintControl(PaintEvent e)
-			{
-				if(_scaledImage != null)
-					e.gc.drawImage(_scaledImage, 0, 0);
-
-			}
-		});
+		_imageCanvas.addPaintListener(this);
 		_imageCanvas.addListener(SWT.MouseDown, new Listener()
 		{
 
@@ -124,6 +117,36 @@ public class ImageDisplayView
 			}
 		});
 
+		CoordinatesCoordinator.getInstance().addListener(this);
+
+	}
+
+	@Override
+	public void paintControl(PaintEvent e)
+	{
+		if(_scaledImage != null)
+		{
+			if(CoordinatesCoordinator.getInstance().getX() > 0)
+			{
+				// if(_copyImage != null)
+				// _copyImage.dispose();
+				// _copyImage = new org.eclipse.swt.graphics.Image(_scaledImage.getDevice(), _scaledImage.getImageData());
+				//
+
+				e.gc.drawImage(_scaledImage, 0, 0);
+				ImageData crosshairImageData = TaggerImages.DESC_GREEN_CROSSHAIR.getImageData(100);
+				ImageData displayedImageData = _scaledImage.getImageData();
+
+				int destX = (int)(((CoordinatesCoordinator.getInstance().getX() / 100) * (displayedImageData.width)) - (crosshairImageData.width / 2));
+				int destY = (int)(((CoordinatesCoordinator.getInstance().getY() / 100) * (displayedImageData.height)) - (crosshairImageData.height / 2));
+
+				e.gc.drawImage(TaggerImages.IMG_GREEN_CROSSHAIR, /* src x */0, /* src y */0, /* src width */crosshairImageData.width,
+						/* src height */ crosshairImageData.height, destX, destY, crosshairImageData.width, crosshairImageData.height);
+			}
+			else
+				e.gc.drawImage(_scaledImage, 0, 0);
+
+		}
 	}
 
 	/**
@@ -168,6 +191,11 @@ public class ImageDisplayView
 			if(_scaledImage != null)
 			{
 				_scaledImage.dispose();
+				if(_copyImage != null)
+				{
+					_copyImage.dispose();
+					_copyImage = null;
+				}
 			}
 			CoordinatesCoordinator.getInstance().reset();
 
@@ -191,6 +219,16 @@ public class ImageDisplayView
 		catch(MalformedURLException e)
 		{
 			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void notifyNewCoordinates(boolean fromData)
+	{
+		if(fromData)
+		{
+			_imageCanvas.redraw();
 		}
 
 	}

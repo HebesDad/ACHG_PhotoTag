@@ -70,6 +70,7 @@ public class PhotoTagModelFactoryImpl extends EFactoryImpl implements PhotoTagMo
 			case PhotoTagModelPackage.TAG_CATEGORY: return createTagCategory();
 			case PhotoTagModelPackage.TAG: return createTag();
 			case PhotoTagModelPackage.TAG_VALUE: return createTagValue();
+			case PhotoTagModelPackage.TAG_VALUE_COORDINATE: return createTagValueCoordinate();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -139,6 +140,17 @@ public class PhotoTagModelFactoryImpl extends EFactoryImpl implements PhotoTagMo
 	{
 		TagValueImpl tagValue = new TagValueImpl();
 		return tagValue;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TagValueCoordinate createTagValueCoordinate()
+	{
+		TagValueCoordinateImpl tagValueCoordinate = new TagValueCoordinateImpl();
+		return tagValueCoordinate;
 	}
 
 	/**

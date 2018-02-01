@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.Image#getTagValuesList <em>Tag Values</em>}</li>
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.Image#getName <em>Name</em>}</li>
+ *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.Image#getTagValueCoordinatesList <em>Tag Value Coordinates</em>}</li>
  * </ul>
  *
  * @see org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelPackage#getImage()
@@ -101,5 +102,56 @@ public interface Image extends EObject
 	 * @generated
 	 */
 	void setName(String value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	TagValueCoordinate[] getTagValueCoordinates();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	TagValueCoordinate getTagValueCoordinates(int index);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	int getTagValueCoordinatesLength();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	void setTagValueCoordinates(TagValueCoordinate[] newTagValueCoordinates);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	void setTagValueCoordinates(int index, TagValueCoordinate element);
+
+	/**
+	 * Returns the value of the '<em><b>Tag Value Coordinates</b></em>' containment reference list.
+	 * The list contents are of type {@link org.achg.phototag.generated.model.PhotoTagModel.TagValueCoordinate}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Tag Value Coordinates</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Tag Value Coordinates</em>' containment reference list.
+	 * @see org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelPackage#getImage_TagValueCoordinates()
+	 * @model containment="true" resolveProxies="true"
+	 * @generated
+	 */
+	List<TagValueCoordinate> getTagValueCoordinatesList();
 
 } // Image

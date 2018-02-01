@@ -17,8 +17,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.TagValue#getValue <em>Value</em>}</li>
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.TagValue#getSubTag <em>Sub Tag</em>}</li>
  *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.TagValue#getSubValue <em>Sub Value</em>}</li>
- *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.TagValue#getXPercentage <em>XPercentage</em>}</li>
- *   <li>{@link org.achg.phototag.generated.model.PhotoTagModel.TagValue#getYPercentage <em>YPercentage</em>}</li>
  * </ul>
  *
  * @see org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelPackage#getTagValue()
@@ -130,58 +128,5 @@ public interface TagValue extends EObject
 	 * @generated
 	 */
 	void setSubValue(String value);
-
-	/**
-	 * Returns the value of the '<em><b>XPercentage</b></em>' attribute.
-	 * The default value is <code>"0"</code>.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>XPercentage</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>XPercentage</em>' attribute.
-	 * @see #setXPercentage(double)
-	 * @see org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelPackage#getTagValue_XPercentage()
-	 * @model default="0"
-	 * @generated
-	 */
-	double getXPercentage();
-
-	/**
-	 * Sets the value of the '{@link org.achg.phototag.generated.model.PhotoTagModel.TagValue#getXPercentage <em>XPercentage</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>XPercentage</em>' attribute.
-	 * @see #getXPercentage()
-	 * @generated
-	 */
-	void setXPercentage(double value);
-
-	/**
-	 * Returns the value of the '<em><b>YPercentage</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>YPercentage</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>YPercentage</em>' attribute.
-	 * @see #setYPercentage(double)
-	 * @see org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelPackage#getTagValue_YPercentage()
-	 * @model
-	 * @generated
-	 */
-	double getYPercentage();
-
-	/**
-	 * Sets the value of the '{@link org.achg.phototag.generated.model.PhotoTagModel.TagValue#getYPercentage <em>YPercentage</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>YPercentage</em>' attribute.
-	 * @see #getYPercentage()
-	 * @generated
-	 */
-	void setYPercentage(double value);
 
 } // TagValue

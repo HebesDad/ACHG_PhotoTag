@@ -74,6 +74,12 @@
         name="Name"
         lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures
+        xsi:type="ecore:EReference"
+        name="TagValueCoordinates"
+        upperBound="-1"
+        eType="#//TagValueCoordinate"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers
       xsi:type="ecore:EClass"
@@ -124,14 +130,21 @@
         xsi:type="ecore:EAttribute"
         name="SubValue"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers
+      xsi:type="ecore:EClass"
+      name="TagValueCoordinate">
     <eStructuralFeatures
         xsi:type="ecore:EAttribute"
-        name="xPercentage"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
-        defaultValueLiteral="0"/>
-    <eStructuralFeatures
-        xsi:type="ecore:EAttribute"
-        name="yPercentage"
+        name="XPercentage"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures
+        xsi:type="ecore:EAttribute"
+        name="YPercentage"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures
+        xsi:type="ecore:EReference"
+        name="TagValue"
+        eType="#//TagValue"/>
   </eClassifiers>
 </ecore:EPackage>

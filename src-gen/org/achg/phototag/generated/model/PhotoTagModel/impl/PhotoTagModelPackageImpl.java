@@ -82,6 +82,13 @@ public class PhotoTagModelPackageImpl extends EPackageImpl implements PhotoTagMo
 	private EClass tagValueEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tagValueCoordinateEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -289,6 +296,16 @@ public class PhotoTagModelPackageImpl extends EPackageImpl implements PhotoTagMo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getImage_TagValueCoordinates()
+	{
+        return (EReference)getImage().getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getTagCategory()
 	{
 		if (tagCategoryEClass == null)
@@ -411,9 +428,13 @@ public class PhotoTagModelPackageImpl extends EPackageImpl implements PhotoTagMo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getTagValue_XPercentage()
+	public EClass getTagValueCoordinate()
 	{
-        return (EAttribute)getTagValue().getEStructuralFeatures().get(4);
+		if (tagValueCoordinateEClass == null)
+		{
+			tagValueCoordinateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(PhotoTagModelPackage.eNS_URI).getEClassifiers().get(6);
+		}
+		return tagValueCoordinateEClass;
 	}
 
 	/**
@@ -421,9 +442,29 @@ public class PhotoTagModelPackageImpl extends EPackageImpl implements PhotoTagMo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getTagValue_YPercentage()
+	public EAttribute getTagValueCoordinate_XPercentage()
 	{
-        return (EAttribute)getTagValue().getEStructuralFeatures().get(5);
+        return (EAttribute)getTagValueCoordinate().getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTagValueCoordinate_YPercentage()
+	{
+        return (EAttribute)getTagValueCoordinate().getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTagValueCoordinate_TagValue()
+	{
+        return (EReference)getTagValueCoordinate().getEStructuralFeatures().get(2);
 	}
 
 	/**

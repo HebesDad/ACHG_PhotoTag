@@ -214,13 +214,22 @@ public interface PhotoTagModelPackage extends EPackage
 	int IMAGE__NAME = 1;
 
 	/**
+	 * The feature id for the '<em><b>Tag Value Coordinates</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMAGE__TAG_VALUE_COORDINATES = 2;
+
+	/**
 	 * The number of structural features of the '<em>Image</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMAGE_FEATURE_COUNT = 2;
+	int IMAGE_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Image</em>' class.
@@ -370,31 +379,13 @@ public interface PhotoTagModelPackage extends EPackage
 	int TAG_VALUE__SUB_VALUE = 3;
 
 	/**
-	 * The feature id for the '<em><b>XPercentage</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG_VALUE__XPERCENTAGE = 4;
-
-	/**
-	 * The feature id for the '<em><b>YPercentage</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG_VALUE__YPERCENTAGE = 5;
-
-	/**
 	 * The number of structural features of the '<em>Tag Value</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TAG_VALUE_FEATURE_COUNT = 6;
+	int TAG_VALUE_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Tag Value</em>' class.
@@ -404,6 +395,62 @@ public interface PhotoTagModelPackage extends EPackage
 	 * @ordered
 	 */
 	int TAG_VALUE_OPERATION_COUNT = 0;
+
+
+	/**
+	 * The meta object id for the '{@link org.achg.phototag.generated.model.PhotoTagModel.impl.TagValueCoordinateImpl <em>Tag Value Coordinate</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.achg.phototag.generated.model.PhotoTagModel.impl.TagValueCoordinateImpl
+	 * @see org.achg.phototag.generated.model.PhotoTagModel.impl.PhotoTagModelPackageImpl#getTagValueCoordinate()
+	 * @generated
+	 */
+	int TAG_VALUE_COORDINATE = 6;
+
+	/**
+	 * The feature id for the '<em><b>XPercentage</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TAG_VALUE_COORDINATE__XPERCENTAGE = 0;
+
+	/**
+	 * The feature id for the '<em><b>YPercentage</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TAG_VALUE_COORDINATE__YPERCENTAGE = 1;
+
+	/**
+	 * The feature id for the '<em><b>Tag Value</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TAG_VALUE_COORDINATE__TAG_VALUE = 2;
+
+	/**
+	 * The number of structural features of the '<em>Tag Value Coordinate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TAG_VALUE_COORDINATE_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Tag Value Coordinate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TAG_VALUE_COORDINATE_OPERATION_COUNT = 0;
 
 
 	/**
@@ -547,6 +594,17 @@ public interface PhotoTagModelPackage extends EPackage
 	EAttribute getImage_Name();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.achg.phototag.generated.model.PhotoTagModel.Image#getTagValueCoordinatesList <em>Tag Value Coordinates</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Tag Value Coordinates</em>'.
+	 * @see org.achg.phototag.generated.model.PhotoTagModel.Image#getTagValueCoordinatesList()
+	 * @see #getImage()
+	 * @generated
+	 */
+	EReference getImage_TagValueCoordinates();
+
+	/**
 	 * Returns the meta object for class '{@link org.achg.phototag.generated.model.PhotoTagModel.TagCategory <em>Tag Category</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -665,26 +723,47 @@ public interface PhotoTagModelPackage extends EPackage
 	EAttribute getTagValue_SubValue();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.achg.phototag.generated.model.PhotoTagModel.TagValue#getXPercentage <em>XPercentage</em>}'.
+	 * Returns the meta object for class '{@link org.achg.phototag.generated.model.PhotoTagModel.TagValueCoordinate <em>Tag Value Coordinate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Tag Value Coordinate</em>'.
+	 * @see org.achg.phototag.generated.model.PhotoTagModel.TagValueCoordinate
+	 * @generated
+	 */
+	EClass getTagValueCoordinate();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.achg.phototag.generated.model.PhotoTagModel.TagValueCoordinate#getXPercentage <em>XPercentage</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>XPercentage</em>'.
-	 * @see org.achg.phototag.generated.model.PhotoTagModel.TagValue#getXPercentage()
-	 * @see #getTagValue()
+	 * @see org.achg.phototag.generated.model.PhotoTagModel.TagValueCoordinate#getXPercentage()
+	 * @see #getTagValueCoordinate()
 	 * @generated
 	 */
-	EAttribute getTagValue_XPercentage();
+	EAttribute getTagValueCoordinate_XPercentage();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.achg.phototag.generated.model.PhotoTagModel.TagValue#getYPercentage <em>YPercentage</em>}'.
+	 * Returns the meta object for the attribute '{@link org.achg.phototag.generated.model.PhotoTagModel.TagValueCoordinate#getYPercentage <em>YPercentage</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>YPercentage</em>'.
-	 * @see org.achg.phototag.generated.model.PhotoTagModel.TagValue#getYPercentage()
-	 * @see #getTagValue()
+	 * @see org.achg.phototag.generated.model.PhotoTagModel.TagValueCoordinate#getYPercentage()
+	 * @see #getTagValueCoordinate()
 	 * @generated
 	 */
-	EAttribute getTagValue_YPercentage();
+	EAttribute getTagValueCoordinate_YPercentage();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.achg.phototag.generated.model.PhotoTagModel.TagValueCoordinate#getTagValue <em>Tag Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Tag Value</em>'.
+	 * @see org.achg.phototag.generated.model.PhotoTagModel.TagValueCoordinate#getTagValue()
+	 * @see #getTagValueCoordinate()
+	 * @generated
+	 */
+	EReference getTagValueCoordinate_TagValue();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -821,6 +900,14 @@ public interface PhotoTagModelPackage extends EPackage
 		EAttribute IMAGE__NAME = eINSTANCE.getImage_Name();
 
 		/**
+		 * The meta object literal for the '<em><b>Tag Value Coordinates</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference IMAGE__TAG_VALUE_COORDINATES = eINSTANCE.getImage_TagValueCoordinates();
+
+		/**
 		 * The meta object literal for the '{@link org.achg.phototag.generated.model.PhotoTagModel.impl.TagCategoryImpl <em>Tag Category</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -915,12 +1002,22 @@ public interface PhotoTagModelPackage extends EPackage
 		EAttribute TAG_VALUE__SUB_VALUE = eINSTANCE.getTagValue_SubValue();
 
 		/**
+		 * The meta object literal for the '{@link org.achg.phototag.generated.model.PhotoTagModel.impl.TagValueCoordinateImpl <em>Tag Value Coordinate</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.achg.phototag.generated.model.PhotoTagModel.impl.TagValueCoordinateImpl
+		 * @see org.achg.phototag.generated.model.PhotoTagModel.impl.PhotoTagModelPackageImpl#getTagValueCoordinate()
+		 * @generated
+		 */
+		EClass TAG_VALUE_COORDINATE = eINSTANCE.getTagValueCoordinate();
+
+		/**
 		 * The meta object literal for the '<em><b>XPercentage</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TAG_VALUE__XPERCENTAGE = eINSTANCE.getTagValue_XPercentage();
+		EAttribute TAG_VALUE_COORDINATE__XPERCENTAGE = eINSTANCE.getTagValueCoordinate_XPercentage();
 
 		/**
 		 * The meta object literal for the '<em><b>YPercentage</b></em>' attribute feature.
@@ -928,7 +1025,15 @@ public interface PhotoTagModelPackage extends EPackage
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TAG_VALUE__YPERCENTAGE = eINSTANCE.getTagValue_YPercentage();
+		EAttribute TAG_VALUE_COORDINATE__YPERCENTAGE = eINSTANCE.getTagValueCoordinate_YPercentage();
+
+		/**
+		 * The meta object literal for the '<em><b>Tag Value</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TAG_VALUE_COORDINATE__TAG_VALUE = eINSTANCE.getTagValueCoordinate_TagValue();
 
 	}
 

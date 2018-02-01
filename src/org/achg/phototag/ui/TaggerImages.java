@@ -26,6 +26,7 @@ public class TaggerImages
 	private static final String IMAGE16 = "image.png"; //$NON-NLS-1$
 	private static final String SAVECOPY16 = "savecopy.png"; //$NON-NLS-1$
 	private static final String CROSSHAIR16 = "crosshair16.png"; //$NON-NLS-1$
+	private static final String GREEN_CROSSHAIR = "greenCrosshair.png"; //$NON-NLS-1$
 
 	/** Tag image */
 	public static final Image IMG_TAG16 = getImage(TAG16);
@@ -41,6 +42,8 @@ public class TaggerImages
 	public static final Image IMG_SAVECOPY16 = getImage(SAVECOPY16);
 	/** crosshair image */
 	public static final Image IMG_CROSSHAIR16 = getImage(CROSSHAIR16);
+	/** crosshair image */
+	public static final Image IMG_GREEN_CROSSHAIR = getImage(GREEN_CROSSHAIR);
 
 	/** Tag image descriptor */
 	public static final ImageDescriptor DESC_TAG16 = getImageDescriptor(TAG16);
@@ -56,6 +59,8 @@ public class TaggerImages
 	public static final ImageDescriptor DESC_SAVECOPY16 = getImageDescriptor(SAVECOPY16);
 	/** Crosshair image descriptor */
 	public static final ImageDescriptor DESC_CROSSHAIR16 = getImageDescriptor(CROSSHAIR16);
+	/** Crosshair image descriptor */
+	public static final ImageDescriptor DESC_GREEN_CROSSHAIR = getImageDescriptor(GREEN_CROSSHAIR);
 
 	private static boolean _initialized = false;
 
@@ -72,6 +77,7 @@ public class TaggerImages
 		initDescription(reg, ICONS_PATH, IMAGE16);
 		initDescription(reg, ICONS_PATH, SAVECOPY16);
 		initDescription(reg, ICONS_PATH, CROSSHAIR16);
+		initDescription(reg, ICONS_PATH, GREEN_CROSSHAIR);
 		_initialized = true;
 	}
 

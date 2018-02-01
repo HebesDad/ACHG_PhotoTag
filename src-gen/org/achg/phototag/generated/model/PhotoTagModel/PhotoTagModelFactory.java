@@ -77,6 +77,15 @@ public interface PhotoTagModelFactory extends EFactory
 	TagValue createTagValue();
 
 	/**
+	 * Returns a new object of class '<em>Tag Value Coordinate</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Tag Value Coordinate</em>'.
+	 * @generated
+	 */
+	TagValueCoordinate createTagValueCoordinate();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

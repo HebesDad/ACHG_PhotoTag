@@ -13,6 +13,7 @@ import org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelFactory;
 import org.achg.phototag.generated.model.PhotoTagModel.Tag;
 import org.achg.phototag.generated.model.PhotoTagModel.TagCategory;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
+import org.achg.phototag.generated.model.PhotoTagModel.TagValueCoordinate;
 import org.achg.phototag.model.DataChangeType;
 import org.achg.phototag.model.IModelContentChangeListener;
 import org.achg.phototag.model.ModelManager;
@@ -55,6 +56,8 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 	private UISynchronize _sync;
 	private double _x;
 	private double _y;
+	private ImagesModelLabelProvider _imagesModelLabelProvider = new ImagesModelLabelProvider();
+	private TagValue _selectedValue = null;
 
 	/**
 	 * Create the UI components
@@ -147,7 +150,7 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 		_tableViewer.getControl().setLayoutData(gd);
 		_tableViewer.setComparator(new TagValueComparator());
 		_tableViewer.setContentProvider(new ArrayContentProvider());
-		_tableViewer.setLabelProvider(new ImagesModelLabelProvider());
+		_tableViewer.setLabelProvider(_imagesModelLabelProvider);
 		Table table = (Table)_tableViewer.getControl();
 		table.addSelectionListener(new SelectionAdapter()
 		{
@@ -158,7 +161,11 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 			}
 		});
 
-		Button deleteTagValue = new Button(viewParent, SWT.NONE);
+		Composite deleteComposite = new Composite(viewParent, SWT.NONE);
+		GridLayout gl = new GridLayout(1, true);
+		deleteComposite.setLayout(gl);
+
+		Button deleteTagValue = new Button(deleteComposite, SWT.NONE);
 		deleteTagValue.setText("Delete");
 		deleteTagValue.addSelectionListener(new SelectionAdapter()
 		{
@@ -176,6 +183,31 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 			}
 		});
 
+		Button deleteValueCoordinates = new Button(deleteComposite, SWT.NONE);
+		deleteValueCoordinates.setText("Delete Coords");
+		deleteValueCoordinates.addSelectionListener(new SelectionAdapter()
+		{
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+
+				if(_selectedValue != null)
+				{
+					TagValueCoordinate victim = null;
+					for(TagValueCoordinate coord : _selectedImage.getTagValueCoordinatesList())
+					{
+						if(coord.getTagValue() == _selectedValue)
+						{
+							victim = coord;
+						}
+					}
+					_selectedImage.getTagValueCoordinatesList().remove(victim);
+					CoordinatesCoordinator.getInstance().clickedAt(0, 0, true);
+					_tableViewer.refresh();
+				}
+			}
+		});
+
 		populateCategoryCombo();
 		populateTagCombo();
 		populateTagValueCombo();
@@ -188,20 +220,20 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 
 	private void processTableSelection()
 	{
-		TagValue selectedValue = (TagValue)((IStructuredSelection)_tableViewer.getSelection()).getFirstElement();
-		TagCategory cat = (TagCategory)selectedValue.getTag().eContainer();
+		_selectedValue = (TagValue)((IStructuredSelection)_tableViewer.getSelection()).getFirstElement();
+		TagCategory cat = (TagCategory)_selectedValue.getTag().eContainer();
 		_catCombo.select(ModelManager.getInstance().getModel().getTagCategoriesList().indexOf(cat));
 
 		populateTagCombo();
 
-		_tagCombo.select(cat.getTagsList().indexOf(selectedValue.getTag()));
+		_tagCombo.select(cat.getTagsList().indexOf(_selectedValue.getTag()));
 
 		populateTagValueCombo();
 
 		int i = 0;
 		for(String contender : _valueCombo.getItems())
 		{
-			if(contender.equals(selectedValue.getValue()))
+			if(contender.equals(_selectedValue.getValue()))
 			{
 				_valueCombo.select(i);
 				break;
@@ -213,19 +245,29 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 
 		// even if we have no sub tag, the combo may have been set previously with sub tag values, so we need to refresh
 
-		_subCombo.select(selectedValue.getTag().getSubTagList().indexOf(selectedValue.getSubTag()));
+		_subCombo.select(_selectedValue.getTag().getSubTagList().indexOf(_selectedValue.getSubTag()));
 		populateSubValueCombo();
 
 		i = 0;
 		for(String contender : _subValueCombo.getItems())
 		{
-			if(contender.equals(selectedValue.getSubValue()))
+			if(contender.equals(_selectedValue.getSubValue()))
 			{
 				_subValueCombo.select(i);
 				break;
 			}
 			i++;
 		}
+
+		for(TagValueCoordinate coord : _selectedImage.getTagValueCoordinatesList())
+		{
+			if(coord.getTagValue() == _selectedValue)
+			{
+				CoordinatesCoordinator.getInstance().clickedAt(coord.getXPercentage(), coord.getYPercentage(), true);
+				return;
+			}
+		}
+		CoordinatesCoordinator.getInstance().clickedAt(0, 0, true);
 	}
 
 	private void addTag()
@@ -298,11 +340,6 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 			ModelManager.getInstance().getModel().getValuesList().add(value);
 			modTypes.add(DataChangeType.ADD_VALUE);
 		}
-
-		value.setXPercentage(_x);
-		value.setYPercentage(_y);
-		CoordinatesCoordinator.getInstance().reset();
-		_x = _y = 0;
 
 		_selectedImage.getTagValuesList().add(value);
 		modTypes.add(DataChangeType.VALUE_USAGE);
@@ -432,7 +469,9 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 		{
 			_selectedImage = (Image)selection;
 			_tableViewer.setInput(((Image)selection).getTagValues());
+			_imagesModelLabelProvider.setParentImage(_selectedImage);
 			_tableViewer.refresh();
+
 		}
 	}
 
@@ -466,7 +505,34 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 	@Override
 	public void notifyNewCoordinates(boolean fromData)
 	{
-		_x = CoordinatesCoordinator.getInstance().getX();
-		_y = CoordinatesCoordinator.getInstance().getY();
+		if(!fromData)
+		{
+			if(_selectedValue == null)
+			{
+				CoordinatesCoordinator.getInstance().reset();
+				return;
+			}
+			_x = CoordinatesCoordinator.getInstance().getX();
+			_y = CoordinatesCoordinator.getInstance().getY();
+			for(TagValueCoordinate coord : _selectedImage.getTagValueCoordinatesList())
+			{
+				if(coord.getTagValue() == _selectedValue)
+				{
+					coord.setXPercentage(_x);
+					coord.setYPercentage(_y);
+					return;
+				}
+			}
+
+			TagValueCoordinate coord = PhotoTagModelFactory.eINSTANCE.createTagValueCoordinate();
+			coord.setTagValue(_selectedValue);
+			coord.setXPercentage(_x);
+			coord.setYPercentage(_y);
+			_selectedImage.getTagValueCoordinatesList().add(coord);
+
+			CoordinatesCoordinator.getInstance().clickedAt(_x, _y, true);
+
+			_tableViewer.refresh();
+		}
 	}
 }
