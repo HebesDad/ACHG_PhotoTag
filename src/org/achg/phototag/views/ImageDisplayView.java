@@ -11,6 +11,7 @@ import org.achg.phototag.FileUtil;
 import org.achg.phototag.generated.model.PhotoTagModel.Image;
 import org.achg.phototag.model.ModelManager;
 import org.achg.phototag.ui.TaggerImages;
+import org.achg.phototag.views.components.CoordinatesCoordinator;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -27,8 +28,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
@@ -42,7 +45,7 @@ public class ImageDisplayView
 	public static final String ID = "org.achg.phototag.part.imageDisplayPart";
 
 	private Label _imageNameLabel;
-	private Canvas _imageLabel;
+	private Canvas _imageCanvas;
 	private Button _saveCopyButton;
 	private org.eclipse.swt.graphics.Image _scaledImage;
 
@@ -94,10 +97,10 @@ public class ImageDisplayView
 		layout = new GridLayout(1, false);
 		imageComposite.setLayout(layout);
 
-		_imageLabel = new Canvas(imageComposite, SWT.FILL);
+		_imageCanvas = new Canvas(imageComposite, SWT.FILL);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		_imageLabel.setLayoutData(gd);
-		_imageLabel.addPaintListener(new PaintListener()
+		_imageCanvas.setLayoutData(gd);
+		_imageCanvas.addPaintListener(new PaintListener()
 		{
 
 			@Override
@@ -105,6 +108,18 @@ public class ImageDisplayView
 			{
 				if(_scaledImage != null)
 					e.gc.drawImage(_scaledImage, 0, 0);
+
+			}
+		});
+		_imageCanvas.addListener(SWT.MouseDown, new Listener()
+		{
+
+			@Override
+			public void handleEvent(Event event)
+			{
+				double x = (((double)event.x) / _scaledImage.getBounds().width) * 100;
+				double y = (((double)event.y) / _scaledImage.getBounds().height) * 100;
+				CoordinatesCoordinator.getInstance().clickedAt(x, y, false);
 
 			}
 		});
@@ -154,19 +169,20 @@ public class ImageDisplayView
 			{
 				_scaledImage.dispose();
 			}
+			CoordinatesCoordinator.getInstance().reset();
 
 			ImageDescriptor desc = ImageDescriptor.createFromURL(new URL("file", null, imageFileName));
 			org.eclipse.swt.graphics.Image swtImage = desc.createImage();
 
-			float scaleFactorH = ((float)(_imageLabel.getParent().getSize().x - 20)) / swtImage.getBounds().width;
-			float scaleFactorV = ((float)(_imageLabel.getParent().getSize().y - 20)) / swtImage.getBounds().height;
+			float scaleFactorH = ((float)(_imageCanvas.getParent().getSize().x - 20)) / swtImage.getBounds().width;
+			float scaleFactorV = ((float)(_imageCanvas.getParent().getSize().y - 20)) / swtImage.getBounds().height;
 
 			float scaleFactor = scaleFactorH < scaleFactorV ? scaleFactorH : scaleFactorV;
 
-			_scaledImage = new org.eclipse.swt.graphics.Image(_imageLabel.getDisplay(),
+			_scaledImage = new org.eclipse.swt.graphics.Image(_imageCanvas.getDisplay(),
 					swtImage.getImageData().scaledTo((int)(swtImage.getBounds().width * scaleFactor), (int)(swtImage.getBounds().height * scaleFactor)));
 
-			_imageLabel.redraw();
+			_imageCanvas.redraw();
 			swtImage.dispose();
 			_imageNameLabel.getParent().requestLayout();
 			desc.destroyResource(swtImage);

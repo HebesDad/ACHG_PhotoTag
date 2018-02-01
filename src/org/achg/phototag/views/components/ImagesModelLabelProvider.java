@@ -2,6 +2,7 @@ package org.achg.phototag.views.components;
 
 import org.achg.phototag.generated.model.PhotoTagModel.TagCategory;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
+import org.achg.phototag.ui.TaggerImages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -14,6 +15,11 @@ public class ImagesModelLabelProvider extends LabelProvider
 	@Override
 	public Image getImage(Object element)
 	{
+		if(element instanceof TagValue)
+		{
+			if(((TagValue)element).getXPercentage() > 0)
+				return TaggerImages.IMG_CROSSHAIR16;
+		}
 		return null;
 	}
 

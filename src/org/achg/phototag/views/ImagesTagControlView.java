@@ -16,6 +16,8 @@ import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
 import org.achg.phototag.model.DataChangeType;
 import org.achg.phototag.model.IModelContentChangeListener;
 import org.achg.phototag.model.ModelManager;
+import org.achg.phototag.views.components.CoordinatesCoordinator;
+import org.achg.phototag.views.components.ICoordinatesListener;
 import org.achg.phototag.views.components.ImagesModelLabelProvider;
 import org.achg.phototag.views.components.TagValueComparator;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -38,7 +40,7 @@ import org.eclipse.swt.widgets.Table;
 /**
  * View for controlling image tags
  */
-public class ImagesTagControlView implements IModelContentChangeListener
+public class ImagesTagControlView implements IModelContentChangeListener, ICoordinatesListener
 {
 	/** Part ID */
 	public static final String ID = "org.achg.phototag.part.imageTagControlView";
@@ -51,6 +53,8 @@ public class ImagesTagControlView implements IModelContentChangeListener
 	private Combo _subValueCombo;
 	private Image _selectedImage = null;
 	private UISynchronize _sync;
+	private double _x;
+	private double _y;
 
 	/**
 	 * Create the UI components
@@ -179,6 +183,7 @@ public class ImagesTagControlView implements IModelContentChangeListener
 		populateSubValueCombo();
 
 		ModelManager.getInstance().addModelContentChangeListener(this);
+		CoordinatesCoordinator.getInstance().addListener(this);
 	}
 
 	private void processTableSelection()
@@ -293,6 +298,11 @@ public class ImagesTagControlView implements IModelContentChangeListener
 			ModelManager.getInstance().getModel().getValuesList().add(value);
 			modTypes.add(DataChangeType.ADD_VALUE);
 		}
+
+		value.setXPercentage(_x);
+		value.setYPercentage(_y);
+		CoordinatesCoordinator.getInstance().reset();
+		_x = _y = 0;
 
 		_selectedImage.getTagValuesList().add(value);
 		modTypes.add(DataChangeType.VALUE_USAGE);
@@ -451,5 +461,12 @@ public class ImagesTagControlView implements IModelContentChangeListener
 				_tableViewer.refresh();
 			}
 		});
+	}
+
+	@Override
+	public void notifyNewCoordinates(boolean fromData)
+	{
+		_x = CoordinatesCoordinator.getInstance().getX();
+		_y = CoordinatesCoordinator.getInstance().getY();
 	}
 }
