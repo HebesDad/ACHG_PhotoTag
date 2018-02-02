@@ -15,7 +15,6 @@ import java.util.Map;
 
 import org.achg.phototag.FileUtil;
 import org.achg.phototag.generated.model.PhotoTagModel.Folder;
-import org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelFactory;
 import org.achg.phototag.generated.model.PhotoTagModel.Root;
 import org.achg.phototag.generated.model.PhotoTagModel.Tag;
 import org.achg.phototag.generated.model.PhotoTagModel.TagCategory;
@@ -294,27 +293,6 @@ public class ModelManager
 
 			FileUtil.copyFile(_modelRoot, _pathToXmi, _pathToXmi + datestr);
 		}
-	}
-
-	private void addDefaultsToModel(Root root)
-	{
-		// consider later just storing a pre-canned xmi that we could then load rather
-		// than doing it all via code
-		TagCategory categoryMeta = PhotoTagModelFactory.eINSTANCE.createTagCategory();
-		categoryMeta.setName("Metadata");
-
-		TagCategory categoryLocation = PhotoTagModelFactory.eINSTANCE.createTagCategory();
-		categoryLocation.setName("Location");
-
-		TagCategory categoryPeople = PhotoTagModelFactory.eINSTANCE.createTagCategory();
-		categoryPeople.setName("People");
-
-		TagCategory categoryEvent = PhotoTagModelFactory.eINSTANCE.createTagCategory();
-		categoryEvent.setName("Event");
-
-		TagCategory[] categories = {categoryMeta, categoryLocation, categoryPeople, categoryEvent};
-
-		root.setTagCategories(categories);
 	}
 
 	/**

@@ -172,12 +172,26 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
+				List<TagValueCoordinate> doomed = new ArrayList<>();
 				for(Object selected : _tableViewer.getStructuredSelection().toList())
 				{
 					if(selected instanceof TagValue)
 					{
 						_selectedImage.getTagValuesList().remove(selected);
+						for(TagValueCoordinate coord : _selectedImage.getTagValueCoordinatesList())
+						{
+							if(coord.getTagValue() == selected)
+							{
+								doomed.add(coord);
+								break;
+							}
+						}
+
 					}
+				}
+				for(TagValueCoordinate coord : doomed)
+				{
+					_selectedImage.getTagValueCoordinatesList().remove(coord);
 				}
 				ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.VALUE_USAGE));
 			}
@@ -272,6 +286,10 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 
 	private void addTag()
 	{
+		// reset coords so we don't inherit values from a previous TagVal;ue
+		_x = _y = 0;
+		CoordinatesCoordinator.getInstance().reset();
+
 		List<DataChangeType> modTypes = new ArrayList<>();
 		_catCombo.getText();
 		TagCategory cat;
@@ -472,6 +490,18 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 			_imagesModelLabelProvider.setParentImage(_selectedImage);
 			_tableViewer.refresh();
 
+			IStructuredSelection sel = (IStructuredSelection)_tableViewer.getSelection();
+			if(sel != null && sel.getFirstElement() != null)
+			{
+				for(TagValueCoordinate coord : _selectedImage.getTagValueCoordinatesList())
+				{
+					if(coord.getTagValue() == sel.getFirstElement())
+					{
+						CoordinatesCoordinator.getInstance().clickedAt(coord.getXPercentage(), coord.getYPercentage(), true);
+						return;
+					}
+				}
+			}
 		}
 	}
 
@@ -520,6 +550,7 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 				{
 					coord.setXPercentage(_x);
 					coord.setYPercentage(_y);
+					CoordinatesCoordinator.getInstance().clickedAt(_x, _y, true);
 					return;
 				}
 			}

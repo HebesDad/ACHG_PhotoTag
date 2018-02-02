@@ -15,6 +15,11 @@ public class ImagesModelLabelProvider extends LabelProvider
 {
 	private org.achg.phototag.generated.model.PhotoTagModel.Image _parentImage = null;
 
+	/**
+	 * Tell the provider which image is being displayed (so it can know about tag value coordinates)
+	 * 
+	 * @param img the image being displayed
+	 */
 	public void setParentImage(org.achg.phototag.generated.model.PhotoTagModel.Image img)
 	{
 		_parentImage = img;

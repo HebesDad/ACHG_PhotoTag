@@ -50,7 +50,6 @@ public class ImageDisplayView implements ICoordinatesListener, PaintListener
 	private Canvas _imageCanvas;
 	private Button _saveCopyButton;
 	private org.eclipse.swt.graphics.Image _scaledImage;
-	private org.eclipse.swt.graphics.Image _copyImage;
 
 	/**
 	 * Create the UI components
@@ -126,14 +125,10 @@ public class ImageDisplayView implements ICoordinatesListener, PaintListener
 	{
 		if(_scaledImage != null)
 		{
+			e.gc.drawImage(_scaledImage, 0, 0);
 			if(CoordinatesCoordinator.getInstance().getX() > 0)
 			{
-				// if(_copyImage != null)
-				// _copyImage.dispose();
-				// _copyImage = new org.eclipse.swt.graphics.Image(_scaledImage.getDevice(), _scaledImage.getImageData());
-				//
 
-				e.gc.drawImage(_scaledImage, 0, 0);
 				ImageData crosshairImageData = TaggerImages.DESC_GREEN_CROSSHAIR.getImageData(100);
 				ImageData displayedImageData = _scaledImage.getImageData();
 
@@ -143,8 +138,6 @@ public class ImageDisplayView implements ICoordinatesListener, PaintListener
 				e.gc.drawImage(TaggerImages.IMG_GREEN_CROSSHAIR, /* src x */0, /* src y */0, /* src width */crosshairImageData.width,
 						/* src height */ crosshairImageData.height, destX, destY, crosshairImageData.width, crosshairImageData.height);
 			}
-			else
-				e.gc.drawImage(_scaledImage, 0, 0);
 
 		}
 	}
@@ -191,11 +184,6 @@ public class ImageDisplayView implements ICoordinatesListener, PaintListener
 			if(_scaledImage != null)
 			{
 				_scaledImage.dispose();
-				if(_copyImage != null)
-				{
-					_copyImage.dispose();
-					_copyImage = null;
-				}
 			}
 			CoordinatesCoordinator.getInstance().reset();
 
