@@ -30,11 +30,12 @@ public class ConsoleView
 	@PostConstruct
 	public void create(Composite viewParent, UISynchronize sync)
 	{
+		_sync = sync;
 		GridLayout layout = new GridLayout(1, false);
 		viewParent.setLayout(layout);
 		Label lab = new Label(viewParent, SWT.NONE);
 		lab.setText("Console:");
-		_consoleText = new Text(viewParent, SWT.FILL | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		_consoleText = new Text(viewParent, SWT.MULTI | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		_consoleText.setEnabled(false);
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		_consoleText.setLayoutData(gd);
@@ -54,7 +55,7 @@ public class ConsoleView
 			public void run()
 			{
 				String content = _consoleText.getText();
-				content = content + message + "\n";
+				content = content + message + " \r\n";
 				_consoleText.setText(content);
 				_consoleText.setSelection(content.length() - 2);
 			}

@@ -534,4 +534,38 @@ public class ModelManager
 		}
 		return true;
 	}
+
+	public TagValue findValue(Tag mainTag, Tag subTag, String mainValue, String subValue)
+	{
+		for(TagValue value : ModelManager.getInstance().getModel().getValuesList())
+		{
+			if(value.getTag() == mainTag && value.getSubTag() == subTag && value.getValue().equals(mainValue))
+			{
+				if((subTag == null && value.getSubTag() == null)
+						|| (value.getSubTag() == subTag && value.getSubValue() != null && value.getSubValue().equals(subValue)))
+				{
+					return value;
+				}
+			}
+		}
+		return null;
+	}
+
+	public List<TagValue> findValues(Tag mainTag, Tag subTag, String mainValue, String subValue)
+	{
+		List<TagValue> result = new ArrayList<>();
+
+		for(TagValue value : ModelManager.getInstance().getModel().getValuesList())
+		{
+			if(value.getTag() == mainTag && value.getSubTag() == subTag && value.getValue().equals(mainValue))
+			{
+				if((subTag == null && value.getSubTag() == null)
+						|| (value.getSubTag() == subTag && value.getSubValue() != null && value.getSubValue().equals(subValue)))
+				{
+					result.add(value);
+				}
+			}
+		}
+		return result;
+	}
 }

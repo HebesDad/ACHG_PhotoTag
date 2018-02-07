@@ -312,7 +312,7 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 		if(tagSel == -1)
 		{
 			mainTag = PhotoTagModelFactory.eINSTANCE.createTag();
-			mainTag.setName(_tagCombo.getText());
+			mainTag.setName(_tagCombo.getText().trim());
 			cat.getTagsList().add(mainTag);
 			tagSel = cat.getTagsLength() - 1;
 			modTypes.add(DataChangeType.ADD_TAG);
@@ -329,7 +329,7 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 			if(subSel == -1)
 			{
 				subTag = PhotoTagModelFactory.eINSTANCE.createTag();
-				subTag.setName(_subCombo.getText());
+				subTag.setName(_subCombo.getText().trim());
 				mainTag.getSubTagList().add(subTag);
 				subSel = mainTag.getSubTagLength() - 1;
 				modTypes.add(DataChangeType.ADD_SUBTAG);
@@ -339,7 +339,7 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 				subTag = mainTag.getSubTag(subSel);
 			}
 		}
-		String mainValue = _valueCombo.getText();
+		String mainValue = _valueCombo.getText().trim();
 		String subValue = _subValueCombo.getText().trim();
 		if(subValue.isEmpty())
 		{
@@ -347,7 +347,7 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 			subTag = null;
 		}
 
-		TagValue value = findValue(mainTag, subTag, mainValue, subValue);
+		TagValue value = ModelManager.getInstance().findValue(mainTag, subTag, mainValue, subValue);
 		if(value == null)
 		{
 			value = PhotoTagModelFactory.eINSTANCE.createTagValue();
@@ -365,7 +365,7 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 		// So if we already had the tag without a subtag we should remove it, so that in effect we have just added a subtag
 		if(subTag != null)
 		{
-			value = findValue(mainTag, null, mainValue, null);
+			value = ModelManager.getInstance().findValue(mainTag, null, mainValue, null);
 
 			if(_selectedImage.getTagValuesList().contains(value))
 			{
@@ -374,22 +374,6 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 		}
 
 		ModelManager.getInstance().notifyModelContentChangeListeners(modTypes);
-	}
-
-	private TagValue findValue(Tag mainTag, Tag subTag, String mainValue, String subValue)
-	{
-		for(TagValue value : ModelManager.getInstance().getModel().getValuesList())
-		{
-			if(value.getTag() == mainTag && value.getSubTag() == subTag && value.getValue().equals(mainValue))
-			{
-				if((subTag == null && value.getSubTag() == null)
-						|| (value.getSubTag() == subTag && value.getSubValue() != null && value.getSubValue().equals(subValue)))
-				{
-					return value;
-				}
-			}
-		}
-		return null;
 	}
 
 	private void populateCategoryCombo()
