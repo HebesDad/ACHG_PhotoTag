@@ -535,6 +535,15 @@ public class ModelManager
 		return true;
 	}
 
+	/**
+	 * Find value matching the criteria
+	 * 
+	 * @param mainTag tag
+	 * @param subTag subtag (can be null)
+	 * @param mainValue value
+	 * @param subValue subtag value (can be null)
+	 * @return the value, or null if not found
+	 */
 	public TagValue findValue(Tag mainTag, Tag subTag, String mainValue, String subValue)
 	{
 		for(TagValue value : ModelManager.getInstance().getModel().getValuesList())
@@ -551,6 +560,15 @@ public class ModelManager
 		return null;
 	}
 
+	/**
+	 * Find all value instances which match the given criteria
+	 * 
+	 * @param mainTag tag
+	 * @param subTag subtag (can be null)
+	 * @param mainValue value
+	 * @param subValue subtag value (can be null)
+	 * @return list of matching values
+	 */
 	public List<TagValue> findValues(Tag mainTag, Tag subTag, String mainValue, String subValue)
 	{
 		List<TagValue> result = new ArrayList<>();
