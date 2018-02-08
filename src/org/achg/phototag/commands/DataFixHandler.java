@@ -10,6 +10,7 @@ import org.achg.phototag.generated.model.PhotoTagModel.Tag;
 import org.achg.phototag.generated.model.PhotoTagModel.TagCategory;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValueCoordinate;
+import org.achg.phototag.model.DataChanger;
 import org.achg.phototag.model.IFolderVisitor;
 import org.achg.phototag.model.ModelManager;
 import org.achg.phototag.views.ConsoleView;
@@ -93,11 +94,10 @@ public class DataFixHandler
 				TagValue replacement = PhotoTagModelFactory.eINSTANCE.createTagValue();
 				if(trimmedSubValue != null && !trimmedSubValue.isEmpty())
 				{
-					replacement.setTag(value.getTag());
-					replacement.setSubTag(value.getSubTag());
+					DataChanger.getInstance().setTagValue(replacement, value.getTag(), value.getSubTag());
 				}
-				replacement.setValue(trimmedValue);
-				replacement.setSubValue(trimmedSubValue);
+				DataChanger.getInstance().setTagValueValues(replacement, trimmedValue, trimmedSubValue);
+
 				if(trimmed != null)
 				{
 					// need to go off and replace TagValue objects
@@ -106,9 +106,10 @@ public class DataFixHandler
 				else
 				{
 					ModelManager.getInstance().visitFolders(new TagValueSwitchingVisitor(value, replacement));
-					ModelManager.getInstance().getModel().getValuesList().add(replacement);
+					DataChanger.getInstance().addTagValue(replacement);
+
 				}
-				ModelManager.getInstance().getModel().getValuesList().remove(value);
+				DataChanger.getInstance().removeTagValue(value);
 
 			}
 		}
@@ -138,7 +139,8 @@ public class DataFixHandler
 						if(_consoleView != null)
 							_consoleView.addMessage("trashing duplicate: " + _tagValueLabelProvider.getText(doomed));
 						ModelManager.getInstance().visitFolders(new TagValueSwitchingVisitor(doomed, value1));
-						ModelManager.getInstance().getModel().getValuesList().remove(doomed);
+						DataChanger.getInstance().removeTagValue(doomed);
+
 					}
 				}
 			}
@@ -154,14 +156,16 @@ public class DataFixHandler
 			_consoleView.addMessage("Looking for spacey tags");
 		for(TagCategory tagCat : ModelManager.getInstance().getModel().getTagCategoriesList())
 		{
-			tagCat.setName(tagCat.getName().trim());
+			DataChanger.getInstance().setCategoryName(tagCat, tagCat.getName().trim());
+
 			for(Tag tag : tagCat.getTagsList())
 			{
 				if(!tag.getName().equals(tag.getName().trim()))
 				{
 					if(_consoleView != null)
 						_consoleView.addMessage("Fixing spacey tag: " + _modelLabelProvider.getText(tag));
-					tag.setName(tag.getName().trim());
+					DataChanger.getInstance().setTagName(tag, tag.getName().trim());
+
 				}
 				for(Tag subtag : tag.getSubTagList())
 				{
@@ -169,7 +173,7 @@ public class DataFixHandler
 					{
 						if(_consoleView != null)
 							_consoleView.addMessage("Fixing spacey tag: " + _modelLabelProvider.getText(subtag));
-						subtag.setName(subtag.getName().trim());
+						DataChanger.getInstance().setTagName(subtag, subtag.getName().trim());
 					}
 				}
 			}
@@ -242,13 +246,14 @@ public class DataFixHandler
 		{
 			if(img.getTagValuesList().contains(_original))
 			{
-				img.getTagValuesList().add(_replacement);
-				img.getTagValuesList().remove(_original);
+				DataChanger.getInstance().addImageValue(img, _replacement);
+				DataChanger.getInstance().removeImageValue(img, _original);
 
 				for(TagValueCoordinate coord : img.getTagValueCoordinatesList())
 				{
 					if(coord.getTagValue() == _original)
-						coord.setTagValue(_replacement);
+						DataChanger.getInstance().setCoordinateValue(coord, _replacement);
+
 				}
 			}
 		}

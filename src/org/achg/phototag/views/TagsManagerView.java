@@ -245,10 +245,8 @@ public class TagsManagerView implements IModelContentChangeListener
 			MessageDialog.openInformation(_shell, "Empty Value!", "Items cannot be created with a name");
 			return;
 		}
-		TagCategory cat = PhotoTagModelFactory.eINSTANCE.createTagCategory();
-		cat.setName(value);
 
-		_modifier.addCategory(_shell, cat);
+		_modifier.addCategory(_shell, value);
 
 		_addCategoryText.setText("");
 	}

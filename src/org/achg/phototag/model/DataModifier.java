@@ -1,9 +1,8 @@
 package org.achg.phototag.model;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
+import org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelFactory;
 import org.achg.phototag.generated.model.PhotoTagModel.Tag;
 import org.achg.phototag.generated.model.PhotoTagModel.TagCategory;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
@@ -20,24 +19,26 @@ public class DataModifier
 	 * Add a tag category
 	 * 
 	 * @param shell the main shell
-	 * @param newCategory the new tag category
+	 * @param categoryName the new name
 	 */
-	public void addCategory(Shell shell, TagCategory newCategory)
+	public void addCategory(Shell shell, String categoryName)
 	{
 		ModelManager manager = ModelManager.getInstance();
 
-		List<TagCategory> categories = new ArrayList<>();
 		for(TagCategory oldCategory : manager.getModel().getTagCategories())
 		{
-			if(oldCategory.getName().equalsIgnoreCase(newCategory.getName()))
+			if(oldCategory.getName().equalsIgnoreCase(categoryName))
 			{
 				MessageDialog.openInformation(shell, "Duplicate", "Creating this item would create a duplicate");
 				return;
 			}
-			categories.add(oldCategory);
+
 		}
-		categories.add(newCategory);
-		manager.getModel().setTagCategories(categories.toArray(new TagCategory[categories.size()]));
+		TagCategory category = PhotoTagModelFactory.eINSTANCE.createTagCategory();
+		category.setName(categoryName);
+
+		DataChanger.getInstance().addCategory(category);
+
 		manager.notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_CATEGORY));
 	}
 
@@ -50,7 +51,7 @@ public class DataModifier
 	 */
 	public void addTag(Shell shell, TagCategory category, Tag newTag)
 	{
-		List<Tag> tags = new ArrayList<>();
+
 		for(Tag oldTag : category.getTags())
 		{
 			if(oldTag.getName().equalsIgnoreCase(newTag.getName()))
@@ -58,13 +59,10 @@ public class DataModifier
 				MessageDialog.openInformation(shell, "Duplicate", "Creating this item would create a duplicate");
 				return;
 			}
-			tags.add(oldTag);
+
 		}
-		tags.add(newTag);
+		DataChanger.getInstance().addTag(category, newTag);
 
-		category.setTags(tags.toArray(new Tag[tags.size()]));
-
-		ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_TAG));
 	}
 
 	/**
@@ -76,7 +74,7 @@ public class DataModifier
 	 */
 	public void addSubTag(Shell shell, Tag parentTag, Tag newSubTag)
 	{
-		List<Tag> subtags = new ArrayList<>();
+
 		for(Tag oldSubTag : parentTag.getSubTag())
 		{
 			if(oldSubTag.getName().equalsIgnoreCase(newSubTag.getName()))
@@ -84,13 +82,11 @@ public class DataModifier
 				MessageDialog.openInformation(shell, "Duplicate", "Creating this item would create a duplicate");
 				return;
 			}
-			subtags.add(oldSubTag);
+
 		}
-		subtags.add(newSubTag);
 
-		parentTag.setSubTag(subtags.toArray(new Tag[subtags.size()]));
+		DataChanger.getInstance().addTag(parentTag, newSubTag);
 
-		ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_SUBTAG));
 	}
 
 	/**
@@ -103,7 +99,6 @@ public class DataModifier
 	{
 		ModelManager manager = ModelManager.getInstance();
 
-		List<TagValue> values = new ArrayList<>();
 		for(TagValue oldValue : manager.getModel().getValues())
 		{
 			if(oldValue.getTag() == newValue.getTag() && oldValue.getSubTag() == newValue.getSubTag())
@@ -114,13 +109,9 @@ public class DataModifier
 					return;
 				}
 			}
-			values.add(oldValue);
+
 		}
-		values.add(newValue);
 
-		manager.getModel().setValues(values.toArray(new TagValue[values.size()]));
-
-		manager.notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_VALUE));
+		DataChanger.getInstance().addTagValue(newValue);
 	}
-
 }
