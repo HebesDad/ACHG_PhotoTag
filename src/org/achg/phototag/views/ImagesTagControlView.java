@@ -27,6 +27,7 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -365,15 +366,29 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 		// So if we already had the tag without a subtag we should remove it, so that in effect we have just added a subtag
 		if(subTag != null)
 		{
-			value = ModelManager.getInstance().findValue(mainTag, null, mainValue, null);
+			TagValue oldvalue = ModelManager.getInstance().findValue(mainTag, null, mainValue, null);
 
-			if(_selectedImage.getTagValuesList().contains(value))
+			if(_selectedImage.getTagValuesList().contains(oldvalue))
 			{
-				_selectedImage.getTagValuesList().remove(value);
+				_selectedImage.getTagValuesList().remove(oldvalue);
 			}
+
+			TagValueCoordinate victim = null;
+			for(TagValueCoordinate coord : _selectedImage.getTagValueCoordinatesList())
+			{
+				if(coord.getTagValue() == value)
+				{
+					victim = coord;
+					break;
+				}
+			}
+			if(victim != null)
+				_selectedImage.getTagValueCoordinatesList().remove(victim);
 		}
 
 		ModelManager.getInstance().notifyModelContentChangeListeners(modTypes);
+		_tableViewer.setSelection(new StructuredSelection(value));
+		_selectedValue = value;
 	}
 
 	private void populateCategoryCombo()
@@ -494,7 +509,7 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 	{
 		if(_sync == null)
 			return;
-		_sync.asyncExec(new Runnable()
+		_sync.syncExec(new Runnable()
 		{
 			@Override
 			public void run()
