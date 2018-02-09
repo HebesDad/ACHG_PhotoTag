@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.achg.phototag.generated.model.PhotoTagModel.Folder;
 import org.achg.phototag.generated.model.PhotoTagModel.Image;
+import org.achg.phototag.generated.model.PhotoTagModel.Root;
 import org.achg.phototag.generated.model.PhotoTagModel.Tag;
 import org.achg.phototag.generated.model.PhotoTagModel.TagCategory;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValueCoordinate;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * Class to do all the data modification - making it easier to implement model delta tracking
@@ -196,6 +199,42 @@ public class DataChanger
 		owner.getSubTagList().add(tag);
 		ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_TAG));
 
+	}
+
+	/**
+	 * Add a folder to a Root or Folder
+	 * 
+	 * @param parent the parent
+	 * @param child the folder to add
+	 * @param sendNotification whether to send a notification
+	 */
+	public void addFolder(EObject parent, Folder child, boolean sendNotification)
+	{
+		if(parent instanceof Root)
+		{
+			((Root)parent).getFoldersList().add(child);
+		}
+		else if(parent instanceof Folder)
+		{
+			((Folder)parent).getFoldersList().add(child);
+		}
+		if(sendNotification)
+			ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_FOLDER));
+
+	}
+
+	/**
+	 * Add an Image to a Folder
+	 * 
+	 * @param parent the folder
+	 * @param child the image
+	 * @param sendNotification whether to send a notification
+	 */
+	public void addImage(Folder parent, Image child, boolean sendNotification)
+	{
+		parent.getImagesList().add(child);
+		if(sendNotification)
+			ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_IMAGE));
 	}
 
 }

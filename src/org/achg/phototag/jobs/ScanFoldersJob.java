@@ -9,6 +9,7 @@ import org.achg.phototag.generated.model.PhotoTagModel.Image;
 import org.achg.phototag.generated.model.PhotoTagModel.PhotoTagModelFactory;
 import org.achg.phototag.generated.model.PhotoTagModel.Root;
 import org.achg.phototag.model.DataChangeType;
+import org.achg.phototag.model.DataChanger;
 import org.achg.phototag.model.ModelManager;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -69,7 +70,8 @@ public class ScanFoldersJob extends Job
 		{
 			matchingFolder = PhotoTagModelFactory.eINSTANCE.createFolder();
 
-			_modelRoot.getFoldersList().add(0, matchingFolder);
+			DataChanger.getInstance().addFolder(_modelRoot, matchingFolder, false);
+
 			_dataModified = true;
 			_extraFolderCount++;
 
@@ -126,7 +128,8 @@ public class ScanFoldersJob extends Job
 					// "new" folder
 					childFolder = PhotoTagModelFactory.eINSTANCE.createFolder();
 					childFolder.setName(child.getAbsolutePath().substring(_rootPrefix.length() + 1));
-					modelFolder.getFoldersList().add(childFolder);
+					DataChanger.getInstance().addFolder(modelFolder, childFolder, false);
+
 					_extraFolderCount++;
 					_dataModified = true;
 					modTypes.add(DataChangeType.ADD_FOLDER);
@@ -139,7 +142,8 @@ public class ScanFoldersJob extends Job
 				{
 					Image newImage = PhotoTagModelFactory.eINSTANCE.createImage();
 					newImage.setName(child.getAbsolutePath().substring(_rootPrefix.length() + 1));
-					modelFolder.getImagesList().add(newImage);
+					DataChanger.getInstance().addImage(modelFolder, newImage, false);
+
 					_extraImageCount++;
 					_dataModified = true;
 					modTypes.add(DataChangeType.ADD_IMAGE);
