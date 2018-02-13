@@ -37,7 +37,7 @@ public class DataModifier
 		TagCategory category = PhotoTagModelFactory.eINSTANCE.createTagCategory();
 		category.setName(categoryName);
 
-		DataChanger.getInstance().addCategory(category);
+		DataChanger.getInstance().addCategory(category, true);
 
 		manager.notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.ADD_CATEGORY));
 	}
@@ -61,7 +61,7 @@ public class DataModifier
 			}
 
 		}
-		DataChanger.getInstance().addTag(category, newTag);
+		DataChanger.getInstance().addTag(category, newTag, true);
 
 	}
 
@@ -85,7 +85,7 @@ public class DataModifier
 
 		}
 
-		DataChanger.getInstance().addTag(parentTag, newSubTag);
+		DataChanger.getInstance().addTag(parentTag, newSubTag, true);
 
 	}
 
@@ -112,6 +112,6 @@ public class DataModifier
 
 		}
 
-		DataChanger.getInstance().addTagValue(newValue);
+		DataChanger.getInstance().addTagValue(newValue, true);
 	}
 }

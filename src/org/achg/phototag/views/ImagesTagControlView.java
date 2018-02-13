@@ -15,6 +15,7 @@ import org.achg.phototag.generated.model.PhotoTagModel.TagCategory;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValue;
 import org.achg.phototag.generated.model.PhotoTagModel.TagValueCoordinate;
 import org.achg.phototag.model.DataChangeType;
+import org.achg.phototag.model.DataChanger;
 import org.achg.phototag.model.IModelContentChangeListener;
 import org.achg.phototag.model.ModelManager;
 import org.achg.phototag.views.components.CoordinatesCoordinator;
@@ -173,27 +174,27 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				List<TagValueCoordinate> doomed = new ArrayList<>();
+				TagValueCoordinate doomed = null;
 				for(Object selected : _tableViewer.getStructuredSelection().toList())
 				{
 					if(selected instanceof TagValue)
 					{
-						_selectedImage.getTagValuesList().remove(selected);
+						DataChanger.getInstance().removeImageValue(_selectedImage, (TagValue)selected, false);
+
 						for(TagValueCoordinate coord : _selectedImage.getTagValueCoordinatesList())
 						{
 							if(coord.getTagValue() == selected)
 							{
-								doomed.add(coord);
+								doomed = coord;
 								break;
 							}
 						}
 
 					}
 				}
-				for(TagValueCoordinate coord : doomed)
-				{
-					_selectedImage.getTagValueCoordinatesList().remove(coord);
-				}
+				if(doomed != null)
+					DataChanger.getInstance().removeCoordinate(_selectedImage, doomed);
+
 				ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.VALUE_USAGE));
 			}
 		});
@@ -216,7 +217,8 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 							victim = coord;
 						}
 					}
-					_selectedImage.getTagValueCoordinatesList().remove(victim);
+					DataChanger.getInstance().removeCoordinate(_selectedImage, victim);
+
 					CoordinatesCoordinator.getInstance().clickedAt(0, 0, true);
 					_tableViewer.refresh();
 				}
@@ -299,7 +301,8 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 		{
 			cat = PhotoTagModelFactory.eINSTANCE.createTagCategory();
 			cat.setName(_catCombo.getText());
-			ModelManager.getInstance().getModel().getTagCategoriesList().add(cat);
+
+			DataChanger.getInstance().addCategory(cat, false);
 			catSel = ModelManager.getInstance().getModel().getTagCategoriesList().size() - 1;
 			modTypes.add(DataChangeType.ADD_CATEGORY);
 		}
@@ -314,7 +317,8 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 		{
 			mainTag = PhotoTagModelFactory.eINSTANCE.createTag();
 			mainTag.setName(_tagCombo.getText().trim());
-			cat.getTagsList().add(mainTag);
+			DataChanger.getInstance().addTag(cat, mainTag, false);
+
 			tagSel = cat.getTagsLength() - 1;
 			modTypes.add(DataChangeType.ADD_TAG);
 		}
@@ -331,7 +335,8 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 			{
 				subTag = PhotoTagModelFactory.eINSTANCE.createTag();
 				subTag.setName(_subCombo.getText().trim());
-				mainTag.getSubTagList().add(subTag);
+				DataChanger.getInstance().addTag(mainTag, subTag, false);
+
 				subSel = mainTag.getSubTagLength() - 1;
 				modTypes.add(DataChangeType.ADD_SUBTAG);
 			}
@@ -356,11 +361,13 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 			value.setSubTag(subTag);
 			value.setValue(mainValue);
 			value.setSubValue(subValue);
-			ModelManager.getInstance().getModel().getValuesList().add(value);
+			DataChanger.getInstance().addTagValue(value, false);
+
 			modTypes.add(DataChangeType.ADD_VALUE);
 		}
 
-		_selectedImage.getTagValuesList().add(value);
+		DataChanger.getInstance().addImageValue(_selectedImage, value, false);
+
 		modTypes.add(DataChangeType.VALUE_USAGE);
 
 		// So if we already had the tag without a subtag we should remove it, so that in effect we have just added a subtag
@@ -370,7 +377,8 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 
 			if(_selectedImage.getTagValuesList().contains(oldvalue))
 			{
-				_selectedImage.getTagValuesList().remove(oldvalue);
+				DataChanger.getInstance().removeImageValue(_selectedImage, oldvalue, false);
+
 			}
 
 			TagValueCoordinate victim = null;
@@ -383,7 +391,10 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 				}
 			}
 			if(victim != null)
-				_selectedImage.getTagValueCoordinatesList().remove(victim);
+			{
+				DataChanger.getInstance().removeCoordinate(_selectedImage, victim);
+
+			}
 		}
 
 		ModelManager.getInstance().notifyModelContentChangeListeners(modTypes);
@@ -558,7 +569,8 @@ public class ImagesTagControlView implements IModelContentChangeListener, ICoord
 			coord.setTagValue(_selectedValue);
 			coord.setXPercentage(_x);
 			coord.setYPercentage(_y);
-			_selectedImage.getTagValueCoordinatesList().add(coord);
+
+			DataChanger.getInstance().addCoordinates(_selectedImage, coord);
 
 			CoordinatesCoordinator.getInstance().clickedAt(_x, _y, true);
 

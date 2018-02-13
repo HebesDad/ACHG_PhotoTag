@@ -106,7 +106,7 @@ public class DataFixHandler
 				else
 				{
 					ModelManager.getInstance().visitFolders(new TagValueSwitchingVisitor(value, replacement));
-					DataChanger.getInstance().addTagValue(replacement);
+					DataChanger.getInstance().addTagValue(replacement, true);
 
 				}
 				DataChanger.getInstance().removeTagValue(value);
@@ -246,8 +246,8 @@ public class DataFixHandler
 		{
 			if(img.getTagValuesList().contains(_original))
 			{
-				DataChanger.getInstance().addImageValue(img, _replacement);
-				DataChanger.getInstance().removeImageValue(img, _original);
+				DataChanger.getInstance().addImageValue(img, _replacement, true);
+				DataChanger.getInstance().removeImageValue(img, _original, true);
 
 				for(TagValueCoordinate coord : img.getTagValueCoordinatesList())
 				{
