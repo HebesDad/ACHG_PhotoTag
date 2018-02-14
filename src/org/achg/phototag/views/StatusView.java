@@ -79,7 +79,14 @@ public class StatusView implements IModelStatusChangeListener
 		{
 			_currentStatusLabel.setText("Not attached to images");
 		}
-		_currentStatusLabel.requestLayout();
+		_sync.asyncExec(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				_currentStatusLabel.requestLayout();
+			}
+		});
 	}
 
 	@Override
