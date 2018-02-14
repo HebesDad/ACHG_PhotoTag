@@ -22,11 +22,7 @@ public class AutoSaveJob extends Job
 	@Override
 	public boolean belongsTo(Object obj)
 	{
-		if(obj == AutoSaveJob.class)
-		{
-			return true;
-		}
-		return false;
+		return (obj == AutoSaveJob.class);
 	}
 
 	@Override
