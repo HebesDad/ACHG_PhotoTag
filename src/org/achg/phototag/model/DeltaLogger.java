@@ -69,14 +69,34 @@ public class DeltaLogger
 	 */
 	public static final String OBJECT_IMAGE = "IMAGE";
 
+	/**
+	 * Marker to represent nulls
+	 */
 	public static final String NULL = "<NULL>";
+	/**
+	 * Marker to represent root of the model
+	 */
 	public static final String ROOT = "<ROOT>";
+	/**
+	 * Marker to represent start of an object - needed to aid disambiguation with string values
+	 */
 	public static final String OBJECT_START = "<OBJECT>";
+	/**
+	 * Marker to represent end of object
+	 */
 	public static final String OBJECT_END = "</OBJECT>";
+	/**
+	 * Marker to divide elements within a single record
+	 */
 	public static final String SPLIT = "<SPLIT>";
 
 	private List<List<String>> _log = new ArrayList<>();
 
+	/**
+	 * emit the model delta log via the output stream
+	 * 
+	 * @param os output stream
+	 */
 	public void emit(FileOutputStream os)
 	{
 		for(List<String> entry : _log)
@@ -98,8 +118,16 @@ public class DeltaLogger
 				e.printStackTrace();
 			}
 		}
+		_log.clear();
 	}
 
+	/**
+	 * Log the delta described by command, type and objects
+	 * 
+	 * @param command
+	 * @param dataType
+	 * @param objects
+	 */
 	public void log(String command, String dataType, EObject... objects)
 	{
 		List<String> entry = new ArrayList<>();
@@ -165,6 +193,14 @@ public class DeltaLogger
 		}
 	}
 
+	/**
+	 * Log the delta described by command, type and objects
+	 * 
+	 * @param command
+	 * @param dataType
+	 * @param object
+	 * @param newValue
+	 */
 	public void log(String command, String dataType, EObject object, String newValue)
 	{
 		List<String> entry = new ArrayList<>();
@@ -181,6 +217,15 @@ public class DeltaLogger
 		_log.add(entry);
 	}
 
+	/**
+	 * Log the delta described by command, type and objects
+	 * 
+	 * @param command
+	 * @param dataType
+	 * @param object1
+	 * @param object2
+	 * @param newValue
+	 */
 	public void log(String command, String dataType, EObject object1, EObject object2, String newValue)
 	{
 		List<String> entry = new ArrayList<>();
@@ -199,6 +244,15 @@ public class DeltaLogger
 		_log.add(entry);
 	}
 
+	/**
+	 * Log the delta described by command, type and objects
+	 * 
+	 * @param command
+	 * @param dataType
+	 * @param object1
+	 * @param newValue1
+	 * @param newValue2
+	 */
 	public void log(String command, String dataType, EObject object1, String newValue1, String newValue2)
 	{
 		List<String> entry = new ArrayList<>();
