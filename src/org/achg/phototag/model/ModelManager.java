@@ -1,6 +1,7 @@
 package org.achg.phototag.model;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -292,6 +293,38 @@ public class ModelManager
 			String datestr = format.format(Date.from(Instant.now()));
 
 			FileUtil.copyFile(_modelRoot, _pathToXmi, _pathToXmi + datestr);
+
+			String deltaLocation = _pathToXmi + ".delta";
+			File deltaFile = new File(deltaLocation);
+			if(!deltaFile.exists())
+				try
+				{
+					deltaFile.createNewFile();
+				}
+				catch(IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			if(deltaFile.exists())
+			{
+				try (FileOutputStream outputStream = new FileOutputStream(deltaFile))
+				{
+					DataChanger.getInstance().getLogger().emit(outputStream);
+				}
+				catch(FileNotFoundException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				catch(IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
 		}
 	}
 

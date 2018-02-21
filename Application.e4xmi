@@ -29,6 +29,7 @@
       <children xsi:type="menu:HandledMenuItem" xmi:id="_pdfCcNp8EeeEleokpxPDWQ" elementId="org.achg.phototag.handledmenuitem.scanFolders" label="Scan Folders" iconURI="platform:/plugin/org.achg.phototag/icons/scan.png" command="_B78K0Np8EeeEleokpxPDWQ"/>
       <children xsi:type="menu:HandledMenuItem" xmi:id="_c0ceQNtAEeeEleokpxPDWQ" elementId="org.achg.phototag.handledmenuitem.switchPerspective" label="Switch View" iconURI="platform:/plugin/org.achg.phototag/icons/switch.png" tooltip="Switch between Tag Manager and Image Views" command="_U_eGENtAEeeEleokpxPDWQ"/>
       <children xsi:type="menu:HandledMenuItem" xmi:id="_cYdjcAgPEeiBd6xljnEhzw" elementId="org.achg.phototag.handledmenuitem.dataFix" label="Data Fix" iconURI="platform:/plugin/org.achg.phototag/icons/datafix.png" command="_Vp8dAAgPEeiBd6xljnEhzw"/>
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_3Lm80BP3Eei-SZhTewTZDw" elementId="org.achg.phototag.handledmenuitem.mergeDeltas" label="Merge Deltas" iconURI="platform:/plugin/org.achg.phototag/icons/merge.png" command="_xXVREBP3Eei-SZhTewTZDw"/>
     </mainMenu>
   </children>
   <handlers xmi:id="_oF2noNaLEeeEleokpxPDWQ" elementId="org.achg.phototag.handler.exit" contributionURI="bundleclass://org.achg.phototag/org.achg.phototag.commands.ExitHandler" command="_hFdRYNZnEeeEleokpxPDWQ"/>
@@ -38,6 +39,7 @@
   <handlers xmi:id="_8NpoYN8HEeeEleokpxPDWQ" elementId="org.achg.phototag.handler.previousImage" contributionURI="bundleclass://org.achg.phototag/org.achg.phototag.commands.PreviousImageHandler" command="_0B9OwN8GEeeEleokpxPDWQ"/>
   <handlers xmi:id="__xwBQN8HEeeEleokpxPDWQ" elementId="org.achg.phototag.handler.nextImage" contributionURI="bundleclass://org.achg.phototag/org.achg.phototag.commands.NextImageHandle" command="_x_bWUN8GEeeEleokpxPDWQ"/>
   <handlers xmi:id="_Y5h-cAgPEeiBd6xljnEhzw" elementId="org.achg.phototag.handler.dataFix" contributionURI="bundleclass://org.achg.phototag/org.achg.phototag.commands.DataFixHandler" command="_Vp8dAAgPEeiBd6xljnEhzw"/>
+  <handlers xmi:id="_3jFMMBP4Eei-SZhTewTZDw" elementId="org.achg.phototag.handler.mergeDeltas" contributionURI="bundleclass://org.achg.phototag/org.achg.phototag.commands.MergeDeltaHandler" command="_xXVREBP3Eei-SZhTewTZDw"/>
   <bindingTables xmi:id="_OPpDoN8HEeeEleokpxPDWQ" elementId="org.achg.phototag.bindingtable.0" bindingContext="_c3AF2sjYEeSyMNYR5xypkQ">
     <bindings xmi:id="_RA3OEN8HEeeEleokpxPDWQ" elementId="org.achg.phototag.keybinding.nextImage" keySequence="F2" command="_x_bWUN8GEeeEleokpxPDWQ"/>
     <bindings xmi:id="_u-oCUN8HEeeEleokpxPDWQ" elementId="org.achg.phototag.keybinding.previousImage" keySequence="F1" command="_0B9OwN8GEeeEleokpxPDWQ"/>
@@ -53,6 +55,7 @@
   <commands xmi:id="_x_bWUN8GEeeEleokpxPDWQ" elementId="org.achg.phototag.command.nextImage" commandName="Next Image"/>
   <commands xmi:id="_0B9OwN8GEeeEleokpxPDWQ" elementId="org.achg.phototag.command.previousImage" commandName="Previous Image"/>
   <commands xmi:id="_Vp8dAAgPEeiBd6xljnEhzw" elementId="org.achg.phototag.command.dataFix" commandName="Data Fix"/>
+  <commands xmi:id="_xXVREBP3Eei-SZhTewTZDw" elementId="org.achg.phototag.command.mergeDeltas" commandName="Merge Deltas"/>
   <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_c3AF08jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_c3AF1MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

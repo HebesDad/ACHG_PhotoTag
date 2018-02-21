@@ -116,7 +116,7 @@ public class DataChanger
 		img.getTagValuesList().add(value);
 		if(sendNotification)
 			ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.VALUE_USAGE));
-		_logger.log(DeltaLogger.COMMAND_ADD, DeltaLogger.OBJECT_VALUE, img, value);
+		_logger.log(DeltaLogger.COMMAND_ASSOCIATE, DeltaLogger.OBJECT_VALUE, img, value);
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class DataChanger
 	public void removeCoordinate(Image parent, TagValueCoordinate coord)
 	{
 		parent.getTagValueCoordinatesList().remove(coord);
-		_logger.log(DeltaLogger.COMMAND_REMOVE, DeltaLogger.OBJECT_COORDINATE, parent, coord);
+		_logger.log(DeltaLogger.COMMAND_DELETE, DeltaLogger.OBJECT_COORDINATE, parent, coord);
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class DataChanger
 		ModelManager.getInstance().getModel().getValuesList().remove(victim);
 		ModelManager.getInstance().notifyModelContentChangeListeners(Collections.singletonList(DataChangeType.REMOVE_VALUE));
 
-		_logger.log(DeltaLogger.COMMAND_REMOVE, DeltaLogger.OBJECT_VALUE, ModelManager.getInstance().getModel(), victim);
+		_logger.log(DeltaLogger.COMMAND_DELETE, DeltaLogger.OBJECT_VALUE, ModelManager.getInstance().getModel(), victim);
 	}
 
 	/**
@@ -282,6 +282,14 @@ public class DataChanger
 		// TODO consider ambiguity and how to know whether things are string or first part of objects, objects might need an object prefix, and strings a String
 		// prefix
 		_logger.log(DeltaLogger.COMMAND_MODIFY, DeltaLogger.OBJECT_VALUE, subject, mainTag, subTag != null ? subTag : DeltaLogger.NULL);
+	}
+
+	/**
+	 * @return the delta logger
+	 */
+	public DeltaLogger getLogger()
+	{
+		return _logger;
 	}
 
 }

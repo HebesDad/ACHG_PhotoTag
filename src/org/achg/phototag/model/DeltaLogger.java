@@ -28,6 +28,10 @@ public class DeltaLogger
 	 */
 	public static final String COMMAND_ADD = "ADD";
 	/**
+	 * Command to add an object
+	 */
+	public static final String COMMAND_ASSOCIATE = "ASSOCIATE";
+	/**
 	 * Command to modify an object
 	 */
 	public static final String COMMAND_MODIFY = "MODIFY";
