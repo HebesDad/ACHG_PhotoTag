@@ -34,31 +34,5 @@ public class FileUtil
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		// // Obtain a new resource set
-		// ResourceSet resSet = new ResourceSetImpl();
-		//
-		// // create a resource
-		// Resource resource = resSet.createResource(URI.createURI("file://" + fromFile.replace('\\', '/')));
-		//
-		// resource.getContents().add(modelRoot);
-		//
-		// try (OutputStream os = new FileOutputStream(new File(toFile)))
-		// {
-		// Files.copy(new File(fromFile).toPath(), os);
-		// }
-		// catch(IOException e)
-		// {
-		// e.printStackTrace();
-		// }
-		// // now save the content.
-		// try
-		// {
-		// resource.save(Collections.EMPTY_MAP);
-		// }
-		// catch(IOException e)
-		// {
-		// e.printStackTrace();
-		// }
 	}
 }
