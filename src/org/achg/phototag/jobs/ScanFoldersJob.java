@@ -2,6 +2,7 @@ package org.achg.phototag.jobs;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.achg.phototag.generated.model.PhotoTagModel.Folder;
@@ -25,6 +26,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class ScanFoldersJob extends Job
 {
+	private static final List<String> VALID_SUFFIXES = Arrays.asList("tif", "tiff", "jpeg", "jpg", "gif", "png");
 	private File _fileRoot;
 	private Root _modelRoot;
 	private boolean _dataModified = false;
@@ -136,7 +138,8 @@ public class ScanFoldersJob extends Job
 				}
 				checkFolderContents(childFolder, child, subMonitor.split(1), modTypes);
 			}
-			if(childName.endsWith(".jpg") || childName.endsWith(".jpeg") || childName.endsWith(".gif") || childName.endsWith(".png"))
+			String[] nameParts = childName.split("\\.");
+			if(nameParts.length > 0 && VALID_SUFFIXES.contains(nameParts[nameParts.length - 1]))
 			{
 				if(findImage(modelFolder, child) == null)
 				{
